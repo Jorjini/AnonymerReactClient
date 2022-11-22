@@ -2,12 +2,15 @@ import Button from 'Elements/Button';
 import { ButtonVartian } from 'Elements/Button/Button.config';
 import Input from 'Elements/Input';
 import { useForm } from 'react-hook-form';
+import { useNavigate } from 'react-router-dom';
 
 const Login = () => {
+  const navigate = useNavigate();
+
   const { register, handleSubmit } = useForm();
 
   const onSubmit = () => {
-    // TODO: submit code  
+    navigate('/kyc');
   };
 
   return (

@@ -1,5 +1,6 @@
 import { faArrowLeft } from '@fortawesome/free-solid-svg-icons';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
+import UserItem from 'Components/UserItem';
 import Button from 'Elements/Button';
 import { ButtonVartian } from 'Elements/Button/Button.config';
 import { useNavigate, useParams } from 'react-router-dom';
@@ -41,6 +42,13 @@ const Room = () => {
         <span className="text-[8px]">
           VIEW MEMBERS
         </span>
+      </div>
+      <div className="mt-[28px] flex flex-wrap">
+        <UserItem name="giorgi ghvedashvili" />
+        <UserItem name="giorgi ghvedashvili" />
+        <UserItem name="giorgi ghvedashvili" />
+        <UserItem name="giorgi ghvedashvili" />
+        <UserItem name="giorgi ghvedashvili" />
       </div>
     </main>
   );

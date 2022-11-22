@@ -5,6 +5,7 @@ import Register from 'Pages/Register';
 import Home from 'Pages/Home';
 import Chat from 'Pages/Chat';
 import Room from 'Pages/Room';
+import KYC from 'Pages/KYC';
 
 const AppRouter = () => {
   return (
@@ -14,6 +15,7 @@ const AppRouter = () => {
         <Route path="/welcome" element={<Welcome />} />
         <Route path="/login" element={<Login />} />
         <Route path="/register" element={<Register />} />
+        <Route path="/kyc" element={<KYC />} />
         <Route path="/chat/:id" element={<Chat />} />
         <Route path="/room/:id" element={<Room />} />
       </Routes>
