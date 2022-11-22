@@ -14,3 +14,7 @@
 html {
   background-color: #f5f5f5;
 }
+
+.chat-style {
+  max-height: calc(100vh - 350px);
+}

@@ -6,11 +6,13 @@ import Input from 'Elements/Input';
 import Button from 'Elements/Button';
 import { ButtonVartian } from 'Elements/Button/Button.config';
 import { useForm } from 'react-hook-form';
-import { useNavigate } from 'react-router-dom';
+import { useNavigate, useParams } from 'react-router-dom';
 
 const Chat = () => {
-  const { register, handleSubmit } = useForm();
   const navigate = useNavigate();
+  const { id } = useParams();
+
+  const { register, handleSubmit } = useForm();
 
   const onSubmit = () => {
     // TODO: submit code
@@ -18,6 +20,10 @@ const Chat = () => {
 
   const handleHomeClick = () => {
     navigate('/');
+  };
+
+  const handleHeaderClick = () => {
+    navigate(`/room/${id}`)
   };
 
 
@@ -35,8 +41,11 @@ const Chat = () => {
           className="[&>*]:fill-white-100"
         />
       </Button>
-      <div className="justify-between bg-white-100 max-h-[80px] rounded-[13px]
-        flex flex-row items-center mt-[21px] px-[15px] py-[10px]"
+      <Button
+        variant={ButtonVartian.NONE}
+        onClick={handleHeaderClick}
+        className="justify-between bg-white-100 max-h-[80px] rounded-[13px]
+        flex flex-row items-center mt-[21px] px-[15px] py-[10px] w-full"
       >
         <div className="flex flex-row items-center gap-[14px]">
           <div className="w-[52px] h-[52px] p-[2px] rounded-[50%] border-[2px] border-green-100">
@@ -50,26 +59,118 @@ const Chat = () => {
         <span className="text-[8px]">
           VIEW MEMBERS
         </span>
-      </div>
+      </Button>
       <div>
-        <div className="mt-[50px] overflow-y-auto max-h-[476px]">
-          <MessageItem />
+        <div className="chat-style mt-[50px] overflow-y-auto flex flex-col gap-[16px]">
+          {/* TODO: map function must be added */}
+          <MessageItem
+            message="This is my message This is my messageThis is my messageThis is my message"
+            time="4:35 am"
+            icon="icon"
+            mine
+          />
+          <MessageItem
+            message="This is you message"
+            time="4:35 am"
+            icon="icon"
+            mine={false}
+          />
+          <MessageItem
+            message="This is you message"
+            time="4:35 am"
+            icon="icon"
+            mine={false}
+          />
+          <MessageItem
+            message="This is you message"
+            time="4:35 am"
+            icon="icon"
+            mine={false}
+          />
+          <MessageItem
+            message="This is you message"
+            time="4:35 am"
+            icon="icon"
+            mine={false}
+          />
+          <MessageItem
+            message="This is you message"
+            time="4:35 am"
+            icon="icon"
+            mine={false}
+          />
+          <MessageItem
+            message="This is you message"
+            time="4:35 am"
+            icon="icon"
+            mine={false}
+          />
+          <MessageItem
+            message="This is you message"
+            time="4:35 am"
+            icon="icon"
+            mine={false}
+          />
+          <MessageItem
+            message="This is you message"
+            time="4:35 am"
+            icon="icon"
+            mine={false}
+          />
+
+          <MessageItem
+            message="This is you message"
+            time="4:35 am"
+            icon="icon"
+            mine={false}
+          />
+          <MessageItem
+            message="This is you message"
+            time="4:35 am"
+            icon="icon"
+            mine={false}
+          />
+          <MessageItem
+            message="This is you message"
+            time="4:35 am"
+            icon="icon"
+            mine={false}
+          />
+          <MessageItem
+            message="This is you message"
+            time="4:35 am"
+            icon="icon"
+            mine={false}
+          />
+          <MessageItem
+            message="This is you message"
+            time="4:35 am"
+            icon="icon"
+            mine={false}
+          />
+          <MessageItem
+            message="This is you message"
+            time="4:35 am"
+            icon="icon"
+            mine={false}
+          />
         </div>
         <form
           onSubmit={handleSubmit(onSubmit)}
-          className="flex flex-row gap-[15px] absolute bottom-[26px]">
+          className="flex flex-row justify-between gap-[15px] absolute bottom-[26px] w-full left-0 px-[25px]"
+        >
           <Input
             type="text"
             placeholder="Type message..."
-            className="!border-[1px] border-gray-200
-          rounded-[50px] px-[18px] py-[15px] max-h-[50px]"
+            className="!border-[1px] border-gray-200 w-full
+              rounded-[50px] px-[18px] py-[15px] max-h-[50px]"
             {...register('message')}
           />
           <Button
             type="submit"
             variant={ButtonVartian.NONE}
-            className="w-[50px] h-[50px] bg-black-100 flex justify-center
-          items-center rounded-[50%]"
+            className="!w-[50px] h-[50px] bg-black-100 flex justify-center
+            items-center rounded-[50%]"
           >
             <FontAwesomeIcon
               icon={faPaperPlane}
