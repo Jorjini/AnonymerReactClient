@@ -16,11 +16,11 @@ const Login = () => {
     navigate('/kyc');
   };
 
-  const responseFacebook = (e: any) => {
-    console.log(e);
-    fbLogin({ accessToken: e?.accessToken })
-  }
-  console.log(process.env);
+  const responseFacebook = async (e: any) => {
+    const req = await fbLogin({ accessToken: e?.accessToken });
+    if (req.statusCode === 200) localStorage.setItem('token', req.token);
+    navigate('/');
+  };
 
   return (
     <main className="px-[25px]">
@@ -69,7 +69,8 @@ const Login = () => {
           autoLoad={true}
           fields="name,email,picture"
           callback={responseFacebook}
-          cssClass="my-facebook-button-class"
+          cssClass="border-[1px] border-black-100 rounded-[24px] w-full py-[13px] max-h-[50px] mt-[10px]
+          flex flex-row gap-[10px] items-center justify-center"
           icon="fa-facebook"
         />
       </form>

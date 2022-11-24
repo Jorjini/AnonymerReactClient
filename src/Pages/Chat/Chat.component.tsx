@@ -1,4 +1,4 @@
-import React from 'react'
+import React, { useEffect } from 'react'
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
 import { faHome, faPaperPlane } from '@fortawesome/free-solid-svg-icons'
 import MessageItem from 'Components/MessageItem';
@@ -26,6 +26,12 @@ const Chat = () => {
     navigate(`/room/${id}`)
   };
 
+  useEffect(() => {
+    const token = localStorage.getItem('token');
+    if (!token) {
+      navigate('/login');
+    };
+  }, [navigate]);
 
   return (
     <main className="px-[25px]">

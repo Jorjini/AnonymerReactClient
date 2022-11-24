@@ -3,6 +3,7 @@ import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import UserItem from 'Components/UserItem';
 import Button from 'Elements/Button';
 import { ButtonVartian } from 'Elements/Button/Button.config';
+import { useEffect } from 'react';
 import { useNavigate, useParams } from 'react-router-dom';
 
 const Room = () => {
@@ -12,6 +13,13 @@ const Room = () => {
   const handleHomeClick = () => {
     navigate(`/chat/${id}`);
   };
+
+  useEffect(() => {
+    const token = localStorage.getItem('token');
+    if (!token) {
+      navigate('/login');
+    };
+  }, [navigate]);
 
   return (
     <main className="px-[25px]">

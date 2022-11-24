@@ -1,3 +1,5 @@
+import { IResponseError } from "./FetchHelper.config";
+
 const FetchHelper = async (endpoint: string, method: string, body?: any, headers?: any) => {
   const url = process.env.REACT_APP_BE_URL
 
@@ -14,7 +16,18 @@ const FetchHelper = async (endpoint: string, method: string, body?: any, headers
     body: JSON.stringify(body)
   });
 
-  return response;
+  const jsonResponse = await response.json();
+
+  if (!response.ok) {
+    const responseError = jsonResponse as unknown as IResponseError<object>;
+    throw new Error(
+      responseError.message ?? 'No error message provided',
+      responseError.errors ?? {},
+    );
+  }
+
+  return jsonResponse;
+
 };
 
 export default FetchHelper;
