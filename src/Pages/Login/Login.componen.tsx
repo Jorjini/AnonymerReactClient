@@ -3,15 +3,24 @@ import { ButtonVartian } from 'Elements/Button/Button.config';
 import Input from 'Elements/Input';
 import { useForm } from 'react-hook-form';
 import { useNavigate } from 'react-router-dom';
+import FacebookLogin from 'react-facebook-login';
+import useFbAuthMutation from 'Mutation/useFbAuthMutation';
 
 const Login = () => {
   const navigate = useNavigate();
+  const fbLogin = useFbAuthMutation();
 
   const { register, handleSubmit } = useForm();
 
   const onSubmit = () => {
     navigate('/kyc');
   };
+
+  const responseFacebook = (e: any) => {
+    console.log(e);
+    fbLogin({ accessToken: e?.accessToken })
+  }
+  console.log(process.env);
 
   return (
     <main className="px-[25px]">
@@ -55,6 +64,14 @@ const Login = () => {
         >
           Login
         </Button>
+        <FacebookLogin
+          appId={process.env.REACT_APP_FACEBOOK_ID!}
+          autoLoad={true}
+          fields="name,email,picture"
+          callback={responseFacebook}
+          cssClass="my-facebook-button-class"
+          icon="fa-facebook"
+        />
       </form>
     </main>
   );
