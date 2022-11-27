@@ -1,4 +1,4 @@
-import React, { useEffect } from 'react'
+// import React, { useEffect } from 'react'
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
 import { faHome, faPaperPlane } from '@fortawesome/free-solid-svg-icons'
 import MessageItem from 'Components/MessageItem';
@@ -7,8 +7,28 @@ import Button from 'Elements/Button';
 import { ButtonVartian } from 'Elements/Button/Button.config';
 import { useForm } from 'react-hook-form';
 import { useNavigate, useParams } from 'react-router-dom';
+import * as SignalR from '@microsoft/signalr';
 
 const Chat = () => {
+  // Sockets
+  // TODO: Need to pass email
+  const hubConnection = new SignalR.HubConnectionBuilder()
+    .withUrl("https://localhost:5001/hubs/chat?email=ghveda1997@mail.ru", {
+      skipNegotiation: true,
+      transport: SignalR.HttpTransportType.WebSockets
+    })
+    .build();
+
+  hubConnection.start().then(a => {
+    // Once started, invokes the sendConnectionId in our ChatHub inside our ASP.NET Core application.
+    if (hubConnection.connectionId) {
+      hubConnection.invoke("sendConnectionId", hubConnection.connectionId);
+    }
+  });
+
+  hubConnection.on('ReceiveMessage', (e) => console.log(e))
+  hubConnection.on('UpdateOnline', (e) => console.log(e))
+
   const navigate = useNavigate();
   const { id } = useParams();
 
@@ -26,12 +46,12 @@ const Chat = () => {
     navigate(`/room/${id}`)
   };
 
-  useEffect(() => {
-    const token = localStorage.getItem('token');
-    if (!token) {
-      navigate('/login');
-    };
-  }, [navigate]);
+  // useEffect(() => {
+  //   const token = localStorage.getItem('token');
+  //   if (!token) {
+  //     navigate('/login');
+  //   };
+  // }, [navigate]);
 
   return (
     <main className="px-[25px]">
