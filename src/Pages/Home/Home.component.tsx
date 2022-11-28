@@ -1,7 +1,7 @@
 import MenuItem from 'Components/MenuItem'
 import Button from 'Elements/Button'
 import { ButtonVartian } from 'Elements/Button/Button.config'
-import { useEffect } from 'react'
+// import { useEffect } from 'react'
 import { useNavigate } from 'react-router-dom'
 import { menuItems } from './Home.mock'
 
@@ -12,14 +12,12 @@ const Home = () => {
     navigate(`/chat/${id}`);
   };
 
-  useEffect(() => {
-    const token = localStorage.getItem('token');
-    if (!token) {
-      navigate('/login');
-    };
-  }, [navigate]);
-
-
+  // useEffect(() => {
+  //   const token = localStorage.getItem('token');
+  //   if (!token) {
+  //     navigate('/login');
+  //   };
+  // }, [navigate]);
 
   return (
     <main className="px-[25px]">

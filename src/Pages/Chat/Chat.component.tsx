@@ -1,4 +1,4 @@
-import React, { useEffect } from 'react'
+// import React, { useEffect } from 'react'
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
 import { faHome, faPaperPlane } from '@fortawesome/free-solid-svg-icons'
 import MessageItem from 'Components/MessageItem';
@@ -7,8 +7,29 @@ import Button from 'Elements/Button';
 import { ButtonVartian } from 'Elements/Button/Button.config';
 import { useForm } from 'react-hook-form';
 import { useNavigate, useParams } from 'react-router-dom';
+import * as SignalR from '@microsoft/signalr';
 
 const Chat = () => {
+  // Sockets
+  // TODO: Need to pass email
+  console.log(process.env.REACT_APP_BE_SOCKET_URL);
+
+  const hubConnection = new SignalR.HubConnectionBuilder()
+    .withUrl(`${process.env.REACT_APP_BE_SOCKET_URL}hubs/chat?email=${'ghveda1997@mail.ru'}`, {
+      skipNegotiation: true,
+      transport: SignalR.HttpTransportType.WebSockets
+    })
+    .build();
+
+  hubConnection.start().then(a => {
+    if (hubConnection.connectionId) {
+      hubConnection.invoke("sendConnectionId", hubConnection.connectionId);
+    }
+  });
+
+  // hubConnection.invoke('ReceiveMessage', { newMessage: 'some' });
+  hubConnection.on('UpdateOnline', (e) => console.log(e));
+
   const navigate = useNavigate();
   const { id } = useParams();
 
@@ -16,6 +37,7 @@ const Chat = () => {
 
   const onSubmit = () => {
     // TODO: submit code
+    hubConnection.invoke('ReceiveMessage', { message: 'some' });
   };
 
   const handleHomeClick = () => {
@@ -26,12 +48,12 @@ const Chat = () => {
     navigate(`/room/${id}`)
   };
 
-  useEffect(() => {
-    const token = localStorage.getItem('token');
-    if (!token) {
-      navigate('/login');
-    };
-  }, [navigate]);
+  // useEffect(() => {
+  //   const token = localStorage.getItem('token');
+  //   if (!token) {
+  //     navigate('/login');
+  //   };
+  // }, [navigate]);
 
   return (
     <main className="px-[25px]">

@@ -16,7 +16,7 @@ const KYC = () => {
   };
 
   const handleVideoClick = () => {
-    navigate('/');
+    navigate('/home');
   };
 
   const bulletStyle = [
