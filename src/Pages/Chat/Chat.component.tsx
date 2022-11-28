@@ -12,22 +12,23 @@ import * as SignalR from '@microsoft/signalr';
 const Chat = () => {
   // Sockets
   // TODO: Need to pass email
+  console.log(process.env.REACT_APP_BE_SOCKET_URL);
+
   const hubConnection = new SignalR.HubConnectionBuilder()
-    .withUrl("https://localhost:5001/hubs/chat?email=ghveda1997@mail.ru", {
+    .withUrl(`${process.env.REACT_APP_BE_SOCKET_URL}hubs/chat?email=${'ghveda1997@mail.ru'}`, {
       skipNegotiation: true,
       transport: SignalR.HttpTransportType.WebSockets
     })
     .build();
 
   hubConnection.start().then(a => {
-    // Once started, invokes the sendConnectionId in our ChatHub inside our ASP.NET Core application.
     if (hubConnection.connectionId) {
       hubConnection.invoke("sendConnectionId", hubConnection.connectionId);
     }
   });
 
-  hubConnection.on('ReceiveMessage', (e) => console.log(e))
-  hubConnection.on('UpdateOnline', (e) => console.log(e))
+  // hubConnection.invoke('ReceiveMessage', { newMessage: 'some' });
+  hubConnection.on('UpdateOnline', (e) => console.log(e));
 
   const navigate = useNavigate();
   const { id } = useParams();
@@ -36,6 +37,7 @@ const Chat = () => {
 
   const onSubmit = () => {
     // TODO: submit code
+    hubConnection.invoke('ReceiveMessage', { message: 'some' });
   };
 
   const handleHomeClick = () => {

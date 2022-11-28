@@ -22,6 +22,9 @@ module.exports = {
         green: {
           100: '#02BC49'
         }
+      },
+      screens: {
+        'lp': '780px'
       }
     },
   },
