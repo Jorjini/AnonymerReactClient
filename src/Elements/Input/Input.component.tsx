@@ -14,7 +14,7 @@ const Input = forwardRef<HTMLInputElement, IInputProps>(({
   const inputStyle = cn([
     className,
     'border-l-0 border-r-0 border-t-0 border-b-[1px] outline-none border-gray-200',
-    'py-[5px]'
+    'py-[5px] lp:bg-black-100 lp:text-white-100 px-[16px] rounded-[8px] lp:h-[48px]'
   ]);
 
   return (

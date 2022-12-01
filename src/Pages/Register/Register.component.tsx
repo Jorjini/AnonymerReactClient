@@ -1,8 +1,10 @@
+import { ImageSecondMask } from 'Assets';
 import Button from 'Elements/Button';
 import { ButtonVartian } from 'Elements/Button/Button.config';
 import Input from 'Elements/Input';
+import Title from 'Elements/Title';
 import { useForm } from 'react-hook-form';
-import { useNavigate } from 'react-router-dom';
+import { Link, useNavigate } from 'react-router-dom';
 
 const Register = () => {
   const navigate = useNavigate();
@@ -10,19 +12,23 @@ const Register = () => {
   const { register, handleSubmit } = useForm();
 
   const onSubmit = () => {
-    navigate('/kyc');
+    navigate('/register/confirm-email');
   };
 
   return (
-    <main className="px-[25px] lp:flex justify-center">
-      <div className="lp:max-w-[500px]">
-        <div className="absolute left-[50%] top-[50px] text-[32px] -translate-x-[50%] text-black-100">
-          <h1 className="font-[300]">Anonymer</h1>
+    <main className="px-[25px] lp:flex justify-center items-center container gap-[181px] h-[100vh]">
+      <div className="hidden lp:block w-[700px] h-[700px]">
+        <img
+          src={ImageSecondMask}
+          alt=""
+          className="w-full h-full bg-cover z-0"
+        />
+      </div>
+      <div className="lp:w-[400px] relative">
+        <div className="flex flex-col mt-[167px] lp:mt-0">
+          <span className="text-[28px] text-center">Create Account</span>
         </div>
-        <div className="flex flex-col mt-[167px]">
-          <span className="text-[20px]">Sign Up</span>
-          <span className="text-gray-100 max-w-[130px] text-[14px]">Create an new account</span>
-        </div>
+        <Title text="SIGN UP WITH EMAIL" className="mt-[29px]" />
         <form
           className="mt-[52px]"
           onSubmit={handleSubmit(onSubmit)}
@@ -60,24 +66,32 @@ const Register = () => {
               {...register('confirmPassword')}
             />
           </div>
-          <div className="flex flex-row gap-[15px] mt-[79px]">
+          <div className="flex flex-row items-center gap-[15px] mt-[79px] lp:mt-[59px]">
             <Input
               type="checkbox"
+              className="accent-black-100"
               {...register('confirmTerms')}
             />
             <span className="text-gray-100 text-[14px]">
-              By creating an account you have to agree with our them & condication.
+              I accept <span className="font-bold text-[14px]">Terms and Conditions</span>
             </span>
-
           </div>
           <Button
             type="submit"
             variant={ButtonVartian.PRIMARY}
-            className="w-full py-[13px] max-h-[50px] mt-[52px] mb-[92px]"
+            className="w-full py-[13px] max-h-[50px] mt-[52px] lp:mt-[28px]"
           >
-            Login
+            Create Account
           </Button>
         </form>
+        <div className="flex flex-row justify-center mt-[30px]">
+          <span className="text-[14px]">
+            Already have an account?
+            <Link to="/login" className="color-black-100 text-[14px] font-bold ml-[4px]">
+              Log In
+            </Link>
+          </span>
+        </div>
       </div>
     </main>
   );

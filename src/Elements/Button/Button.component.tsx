@@ -11,7 +11,7 @@ const Button = ({
 
   const buttonStyle = cn([
     className,
-    'rounded-[30px] border-[2px] border-white-100',
+    'rounded-[30px] border-[2px] lp:rounded-[8px] border-white-100',
     { '': ButtonVartian.NONE },
     { 'bg-black-100 text-white-100': variant === ButtonVartian.PRIMARY },
     { 'text-black-100 bg-white-100': variant === ButtonVartian.SECONDARY },
