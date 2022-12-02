@@ -14,15 +14,15 @@ const ConfirmEmail = () => {
   };
 
   return (
-    <main className="px-[25px] lp:flex justify-center items-center container gap-[181px] h-[100vh]">
-      <div className="hidden lp:block w-[700px] h-[700px]">
+    <main className="lp:flex justify-between items-center container gap-[181px] h-[100vh] py-[50%] lp:py-0">
+      <div className="hidden lp:block w-[50vw] h-[100vh]">
         <img
           src={ImageSecondMask}
           alt=""
           className="w-full h-full bg-cover z-0"
         />
       </div>
-      <div className="lp:relative lp:w-[400px] ">
+      <div className="lp:relative lp:w-[400px] lp:mt-0">
         <div className="text-center">
           <h1 className="text-[50px]">ENTER CODE</h1>
           <span className="text-[18px] text-gray-100">

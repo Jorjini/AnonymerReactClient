@@ -16,8 +16,8 @@ const Register = () => {
   };
 
   return (
-    <main className="px-[25px] lp:flex justify-center items-center container gap-[181px] h-[100vh]">
-      <div className="hidden lp:block w-[700px] h-[700px]">
+    <main className="lp:flex justify-between items-center container gap-[181px] h-[100vh]">
+      <div className="hidden lp:block w-[50vw] h-[100vh]">
         <img
           src={ImageSecondMask}
           alt=""
