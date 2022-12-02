@@ -10,7 +10,7 @@ const ConfirmEmail = () => {
   const { register, handleSubmit } = useForm();
 
   const onSubmit = () => {
-    navigate('/kyc');
+    navigate('/kyc/start');
   };
 
   return (

@@ -1,7 +1,12 @@
 import ImageMask from './Images/maskfree.png';
 import ImageSecondMask from './Images/SecondMask.png'
+import ImageKycStart from './Images/kycStart.png'
+import ImageSuccess from './Images/Success.png'
+
 
 export {
   ImageMask,
-  ImageSecondMask
+  ImageSecondMask,
+  ImageKycStart,
+  ImageSuccess
 }

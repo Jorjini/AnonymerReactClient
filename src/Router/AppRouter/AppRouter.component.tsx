@@ -8,6 +8,8 @@ import Room from 'Pages/Room';
 import KYC from 'Pages/KYC';
 import Error from 'Pages/Error';
 import ConfirmEmail from 'Pages/ConfirmEmail';
+import KycStart from 'Pages/KYC/KycStart';
+import KycSuccess from 'Pages/KYC/KycSuccess';
 
 const AppRouter = () => {
   return (
@@ -20,7 +22,10 @@ const AppRouter = () => {
           <Route element={<Register />} index />
           <Route path="confirm-email" element={<ConfirmEmail />} />
         </Route>
-        <Route path="/kyc" element={<KYC />} />
+        <Route path="/kyc" element={<KYC />} >
+          <Route path="start" element={<KycStart />} />
+          <Route path="success" element={<KycSuccess />} />
+        </Route>
         <Route path="/chat/:id" element={<Chat />} />
         <Route path="/room/:id" element={<Room />} />
         <Route path="*" element={<Error />} />
