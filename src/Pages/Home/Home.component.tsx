@@ -1,7 +1,6 @@
 import MenuItem from 'Components/MenuItem'
 import Button from 'Elements/Button'
 import { ButtonVartian } from 'Elements/Button/Button.config'
-// import { useEffect } from 'react'
 import { Outlet, useNavigate } from 'react-router-dom'
 import { menuItems } from './Home.mock'
 

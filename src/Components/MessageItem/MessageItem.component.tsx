@@ -7,7 +7,6 @@ const MessageItem = ({
   time,
   icon
 }: IMessageItemProps) => {
-
   const messageStyle = cn([
     'max-w-[270px] rounded-[15px] p-[17px]',
     { 'bg-gray-400 rounded-br-[0px]': !mine },

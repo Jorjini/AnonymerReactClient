@@ -8,7 +8,6 @@ import { Link, useNavigate } from 'react-router-dom';
 
 const Register = () => {
   const navigate = useNavigate();
-
   const { register, handleSubmit } = useForm();
 
   const onSubmit = () => {

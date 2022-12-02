@@ -4,7 +4,6 @@ import { ImageAvatar } from 'Assets';
 import UserItem from 'Components/UserItem';
 import Button from 'Elements/Button';
 import { ButtonVartian } from 'Elements/Button/Button.config';
-// import { useEffect } from 'react';
 import { useNavigate, useParams } from 'react-router-dom';
 
 const Room = () => {
