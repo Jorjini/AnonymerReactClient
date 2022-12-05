@@ -1,3 +1,5 @@
+import { faPlus } from '@fortawesome/free-solid-svg-icons'
+import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
 import MenuItem from 'Components/MenuItem'
 import { useGlobalContext } from 'Contexts/GlobalContext'
 import { GlobalContextTypes } from 'Contexts/GlobalContext/GlobalContext.config'
@@ -56,6 +58,34 @@ const Home = () => {
                 />
               </Button>
             ))}
+            <div className="flex justify-between gap-[20px]">
+              <Button
+                variant={ButtonVartian.PRIMARY}
+                className="w-full max-h-[70px] py-[22px] !rounded-[50px]"
+              >
+                <span className="text-white-100 mr-[10px]">
+                  Add Channel
+                </span>
+                <FontAwesomeIcon
+                  icon={faPlus}
+                  color="white"
+                  className="[&>*]:fill-white-100"
+                />
+              </Button>
+              <Button
+                variant={ButtonVartian.PRIMARY}
+                className="w-full max-h-[70px] py-[22px] !rounded-[50px]"
+              >
+                <span className="text-white-100 mr-[10px]">
+                  Create Channel
+                </span>
+                <FontAwesomeIcon
+                  icon={faPlus}
+                  color="white"
+                  className="[&>*]:fill-white-100"
+                />
+              </Button>
+            </div>
           </div>
         </div>
       )}
