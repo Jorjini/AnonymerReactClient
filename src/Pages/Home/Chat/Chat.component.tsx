@@ -8,10 +8,15 @@ import { useForm } from 'react-hook-form';
 import { useNavigate, useParams } from 'react-router-dom';
 import * as SignalR from '@microsoft/signalr';
 import { ImageAvatar } from 'Assets';
+import { useGlobalContext } from 'Contexts/GlobalContext';
+import windowSize from 'Helpers/windowSize';
+import { GlobalContextTypes } from 'Contexts/GlobalContext/GlobalContext.config';
 
 const Chat = () => {
-  const navigate = useNavigate();
+  const { dispatch } = useGlobalContext();
+  const { windowWidth } = windowSize();
   const { id } = useParams();
+  const navigate = useNavigate();
 
   const { register, handleSubmit } = useForm();
 
@@ -39,7 +44,14 @@ const Chat = () => {
   };
 
   const handleHomeClick = () => {
-    navigate('/');
+    if (windowWidth <= 1100) {
+      dispatch({
+        type: GlobalContextTypes.SHOW_CHAT_MENU,
+        payload: {
+          showChatMenu: true
+        }
+      });
+    };
   };
 
   const handleHeaderClick = () => {
@@ -54,12 +66,12 @@ const Chat = () => {
   // }, [navigate]);
 
   return (
-    <div className="px-[25px] lp:px-[100px] w-[68vw]">
+    <div className="px-[25px] lp:px-[100px] lp:w-[68vw]">
       <Button
         onClick={handleHomeClick}
         variant={ButtonVartian.NONE}
         className="w-[35px] h-[35px] bg-black-100 flex lp:hidden
-        justify-center items-center rounded-[50%] mt-[53px]"
+        justify-center items-center rounded-[50%] mt-[53px] "
       >
         <FontAwesomeIcon
           icon={faHome}
@@ -89,7 +101,7 @@ const Chat = () => {
         </span>
       </Button>
       <div className="relative">
-        <div className="chat-style mt-[50px] overflow-y-auto flex flex-col gap-[16px]">
+        <div className="chat-style lp:mt-[50px] overflow-y-auto flex flex-col gap-[16px]">
           {/* TODO: map function must be added */}
           <MessageItem
             message="This is my message This is my messageThis is my messageThis is my message"

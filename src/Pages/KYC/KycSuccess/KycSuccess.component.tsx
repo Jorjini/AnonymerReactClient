@@ -23,7 +23,7 @@ const KycSuccess = () => {
         <div>
           <Button
             variant={ButtonVartian.PRIMARY}
-            onClick={() => navigate('/chat/1')}
+            onClick={() => navigate('/home/chat/1')}
             className="mt-[50px] max-w-[200px] max-h-[48px] py-[12px] px-[77px]"
           >
             Next

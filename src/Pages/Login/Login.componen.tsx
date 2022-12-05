@@ -11,7 +11,7 @@ const Login = () => {
   const { register, handleSubmit } = useForm();
 
   const onSubmit = () => {
-    navigate('/kyc');
+    navigate('/home/chat/1');
   };
 
   return (

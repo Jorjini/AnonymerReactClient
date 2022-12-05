@@ -2,16 +2,25 @@ import { faArrowLeft } from '@fortawesome/free-solid-svg-icons';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { ImageAvatar } from 'Assets';
 import UserItem from 'Components/UserItem';
+import { useGlobalContext } from 'Contexts/GlobalContext';
+import { GlobalContextTypes } from 'Contexts/GlobalContext/GlobalContext.config';
 import Button from 'Elements/Button';
 import { ButtonVartian } from 'Elements/Button/Button.config';
-import { useNavigate, useParams } from 'react-router-dom';
+import windowSize from 'Helpers/windowSize';
 
 const Room = () => {
-  const navigate = useNavigate();
-  const { id } = useParams();
+  const { dispatch } = useGlobalContext();
+  const { windowWidth } = windowSize();
 
   const handleHomeClick = () => {
-    navigate(`/home/chat/${id}`);
+    if (windowWidth <= 1100) {
+      dispatch({
+        type: GlobalContextTypes.SHOW_CHAT_MENU,
+        payload: {
+          showChatMenu: true
+        }
+      });
+    };
   };
 
   // useEffect(() => {
@@ -22,11 +31,11 @@ const Room = () => {
   // }, [navigate]);
 
   return (
-    <div className="px-[25px] lp:px-[100px] w-[68vw]">
+    <div className="px-[25px] lp:px-[100px] lp:w-[68vw]">
       <Button
         onClick={handleHomeClick}
         variant={ButtonVartian.NONE}
-        className="w-[35px] h-[35px] bg-black-100 flex 
+        className="w-[35px] h-[35px] bg-black-100 flex lp:hidden
         justify-center items-center rounded-[50%] mt-[53px]"
       >
         <FontAwesomeIcon

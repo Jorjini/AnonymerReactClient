@@ -6,7 +6,7 @@ const Title = ({
   className
 }: ITitleProps) => (
   <div className={cn(className, 'flex flex-col mt-[230px]')}>
-    <span className="m-auto w-[150px] text-center z-10 bg-gray-200 text-gray-600 text-[12px]">
+    <span className="m-auto w-[150px] text-center z-10 bg-white-100 text-gray-600 text-[12px]">
       {text}
     </span>
     <span className="w-full border-t-[1px] border-gray-300 -translate-y-[10px]" />

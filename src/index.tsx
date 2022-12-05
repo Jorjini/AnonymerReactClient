@@ -1,3 +1,4 @@
+import GlobalContext from 'Contexts/GlobalContext';
 import React from 'react';
 import ReactDOM from 'react-dom/client';
 import './index.css';
@@ -10,7 +11,9 @@ const root = ReactDOM.createRoot(
 
 root.render(
   <React.StrictMode>
-    <AppRouter />
+    <GlobalContext>
+      <AppRouter />
+    </GlobalContext>
   </React.StrictMode>
 );
 
