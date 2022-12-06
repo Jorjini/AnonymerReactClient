@@ -23,7 +23,7 @@ const ConfirmEmail = () => {
       localStorage.setItem('token', req.token.anonymerToken);
       localStorage.setItem('userData', JSON.stringify(req));
 
-      navigate('/kyc/start');
+      navigate('/kyc/upload');
     } else {
       setErrorMessage(req.message[0]);
       setShowToast(true);
@@ -32,8 +32,11 @@ const ConfirmEmail = () => {
 
   useEffect(() => {
     const token = localStorage.getItem('token');
-    if (token) {
-      navigate('/home/chat/1');
+    const userData = JSON.parse(localStorage.getItem('userData')!);
+    const userDataToken = userData?.token
+
+    if (token && userDataToken.emailVerified) {
+      navigate('/kyc/upload');
     };
   }, [navigate]);
 

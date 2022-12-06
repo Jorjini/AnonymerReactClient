@@ -8,6 +8,7 @@ import Title from 'Elements/Title';
 import useLoginMutation from 'Mutation/useLoginMutation';
 import { useEffect, useState } from 'react';
 import Toast from 'Components/Toast';
+import { UserKycStatus } from 'Types/Types';
 
 const Login = () => {
   const [showToast, setShowToast] = useState(false);
@@ -21,13 +22,15 @@ const Login = () => {
   const onSubmit = async (event: any) => {
     const req = await loginMutation(event);
 
-    if (req.email) {
+    if (req?.email) {
+      localStorage.setItem('token', req.anonymerToken);
+      localStorage.setItem('userData', JSON.stringify({ token: req }));
+
       if (!req.anonymerToken) {
         navigate('/register/confirm-email');
+      } else if (req.kycStatus !== UserKycStatus.Completed) {
+        navigate('/kyc/upload');
       } else {
-        localStorage.setItem('token', req.anonymerToken);
-        localStorage.setItem('userData', JSON.stringify({ token: req }));
-
         navigate('/home/chat/1');
       };
     } else {
@@ -38,7 +41,18 @@ const Login = () => {
 
   useEffect(() => {
     const token = localStorage.getItem('token');
-    if (token) {
+    const userData = JSON.parse(localStorage.getItem('userData')!);
+    const userDataToken = userData?.token
+
+    if (token && !userDataToken?.emailVerified) {
+      navigate('/register/confirm-email');
+    } else if (token && userDataToken?.kycStatus !== UserKycStatus.Completed) {
+      navigate('/kyc/upload');
+    } else if (
+      token &&
+      userDataToken?.kycStatus === UserKycStatus.Completed &&
+      userDataToken?.emailVerified
+    ) {
       navigate('/home/chat/1');
     };
   }, [navigate]);
@@ -70,6 +84,7 @@ const Login = () => {
               <Input
                 id="email"
                 type="email"
+                required
                 placeholder="rikafashionshop@gmail.com"
                 {...register('email')}
               />
@@ -81,6 +96,7 @@ const Login = () => {
               <Input
                 id="password"
                 type="password"
+                required
                 placeholder="Password"
                 {...register('password')}
               />

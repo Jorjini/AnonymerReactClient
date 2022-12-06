@@ -1,20 +1,44 @@
 import { faArrowRight } from "@fortawesome/free-solid-svg-icons";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
+import Spinner from "Components/Spinner/Spinner.component";
 import Button from "Elements/Button";
 import { ButtonVartian } from "Elements/Button/Button.config";
 import Input from "Elements/Input";
+import useKycInitMutation from "Mutation/useKycInitMutation";
 import { useForm } from "react-hook-form";
+// import { useNavigate } from "react-router-dom";
+import { UserKycStatus } from "Types/Types";
 
 const KycUpload = () => {
+  const userData = localStorage.getItem('userData')!;
+  const { token } = JSON.parse(userData);
+
+  // const navigate = useNavigate();
   const { register, handleSubmit } = useForm();
+  const kycInitMutation = useKycInitMutation();
 
+  const onSubmit = async (event: any) => {
 
-  const onSubmit = () => {
+    const formData = new FormData();
 
+    formData.append('UserId', token.userId);
+    formData.append('FirstName', token.FirstName);
+    formData.append('LastName', token.LastName);
+    formData.append('ID', event.ID['0']);
+
+    const req = await kycInitMutation(formData);
+
+    if (req.statusCode === 200) {
+      // navigate('/kyc/success');
+      console.log('some');
+    } else {
+      // TODO: Toast
+    }
   };
 
   return (
     <form onSubmit={handleSubmit(onSubmit)}>
+      <Spinner text="Pending..." show={token?.kycStatus === UserKycStatus.Pending} />
       <div className="flex flex-row justify-center mt-[51px] mb-[141px]">
         <h1 className="lp:hidden block text-[32px]">Anonymer</h1>
       </div>
@@ -26,7 +50,7 @@ const KycUpload = () => {
           id="firstName"
           required
           type="text"
-          {...register('firstName')}
+          {...register('FirstName')}
         />
       </div>
       <div className="flex flex-col mt-[25px]">
@@ -35,7 +59,7 @@ const KycUpload = () => {
           id="lastName"
           required
           type="text"
-          {...register('lastName')}
+          {...register('LastName')}
         />
       </div>
       <div className="mt-[50px]">
@@ -51,7 +75,7 @@ const KycUpload = () => {
           type="file"
           className="hidden"
           required
-          {...register('file')}
+          {...register('ID')}
         />
       </div>
       <Button

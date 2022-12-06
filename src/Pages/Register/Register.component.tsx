@@ -38,12 +38,12 @@ const Register = () => {
     }
   };
 
-  useEffect(() => {
-    const token = localStorage.getItem('token');
-    if (token) {
-      navigate('/home/chat/1');
-    };
-  }, [navigate]);
+  // useEffect(() => {
+  //   const token = localStorage.getItem('token');
+  //   if (token) {
+  //     navigate('/home/chat/1');
+  //   };
+  // }, [navigate]);
 
   return (
     <main className="lp:flex justify-between items-center container gap-[181px] h-[100vh]">
