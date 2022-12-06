@@ -6,7 +6,7 @@ import { GlobalContextTypes } from 'Contexts/GlobalContext/GlobalContext.config'
 import Button from 'Elements/Button'
 import { ButtonVartian } from 'Elements/Button/Button.config'
 import windowSize from 'Helpers/windowSize'
-import { useEffect } from 'react'
+// import { useEffect } from 'react'
 import { Outlet, useNavigate } from 'react-router-dom'
 import { menuItems } from './Home.mock'
 // import * as SignalR from '@microsoft/signalr';

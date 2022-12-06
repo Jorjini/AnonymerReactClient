@@ -3,6 +3,7 @@ import useGetAllActiveQuery from "Query/useGetAllActiveQuery";
 import { useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { IKyc, UserKycStatus } from "Types/Types";
+import * as SignalR from '@microsoft/signalr';
 
 const Admin = () => {
   const [allData, setAllData] = useState<IKyc[]>([]);
@@ -46,6 +47,21 @@ const Admin = () => {
       status: UserKycStatus.Completed
     });
   };
+
+
+  // Sockets
+  // TODO: Need to pass email
+  const hubConnection = new SignalR.HubConnectionBuilder()
+    .withUrl(`${process.env.REACT_APP_BE_SOCKET_URL}hubs/admin?email=${userData?.token?.email}`, {
+      skipNegotiation: true,
+      transport: SignalR.HttpTransportType.WebSockets
+    })
+    .build();
+
+  hubConnection.start().then(() => {
+    // hubConnection.invoke('send-message', { message: 'text is done' });
+    hubConnection.on('newKyc', (e) => console.log(e, 'asdasdasd'));
+  });
 
   return (
     <main className="p-[25px]">
