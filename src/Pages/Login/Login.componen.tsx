@@ -5,17 +5,47 @@ import { useForm } from 'react-hook-form';
 import { Link, useNavigate } from 'react-router-dom';
 import { ImageSecondMask } from 'Assets';
 import Title from 'Elements/Title';
+import useLoginMutation from 'Mutation/useLoginMutation';
+import { useEffect, useState } from 'react';
+import Toast from 'Components/Toast';
 
 const Login = () => {
+  const [showToast, setShowToast] = useState(false);
+  const [errorMessage, setErrorMessage] = useState("");
+
   const navigate = useNavigate();
   const { register, handleSubmit } = useForm();
 
-  const onSubmit = () => {
-    navigate('/home/chat/1');
+  const loginMutation = useLoginMutation();
+
+  const onSubmit = async (event: any) => {
+    const req = await loginMutation(event);
+
+    if (req.email) {
+      if (!req.anonymerToken) {
+        navigate('/register/confirm-email');
+      } else {
+        localStorage.setItem('token', req.anonymerToken);
+        localStorage.setItem('userData', JSON.stringify({ token: req }));
+
+        navigate('/home/chat/1');
+      };
+    } else {
+      setErrorMessage(req.message[0]);
+      setShowToast(true);
+    }
   };
+
+  useEffect(() => {
+    const token = localStorage.getItem('token');
+    if (token) {
+      navigate('/home/chat/1');
+    };
+  }, [navigate]);
 
   return (
     <main className="lp:flex justify-between items-center container gap-[181px] h-[100vh]">
+      <Toast show={showToast} message={errorMessage} onClose={() => setShowToast(false)} />
       <div className="hidden lp:block w-[50vw] h-[100vh]">
         <img
           src={ImageSecondMask}

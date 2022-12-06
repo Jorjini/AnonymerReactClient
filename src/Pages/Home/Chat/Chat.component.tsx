@@ -6,7 +6,6 @@ import Button from 'Elements/Button';
 import { ButtonVartian } from 'Elements/Button/Button.config';
 import { useForm } from 'react-hook-form';
 import { useNavigate, useParams } from 'react-router-dom';
-import * as SignalR from '@microsoft/signalr';
 import { ImageAvatar } from 'Assets';
 import { useGlobalContext } from 'Contexts/GlobalContext';
 import windowSize from 'Helpers/windowSize';
@@ -20,31 +19,14 @@ const Chat = () => {
 
   const { register, handleSubmit } = useForm();
 
-  // Sockets
-  // TODO: Need to pass email
-  const hubConnection = new SignalR.HubConnectionBuilder()
-    .withUrl(`${process.env.REACT_APP_BE_SOCKET_URL}hubs/chat?email=${'ghveda1997@mail.ru'}`, {
-      skipNegotiation: true,
-      transport: SignalR.HttpTransportType.WebSockets
-    })
-    .build();
-
-  hubConnection.start().then(a => {
-    if (hubConnection.connectionId) {
-      hubConnection.invoke("sendConnectionId", hubConnection.connectionId);
-    }
-  });
-
-  // hubConnection.invoke('ReceiveMessage', { newMessage: 'some' });
-  hubConnection.on('UpdateOnline', (e) => console.log(e));
 
   const onSubmit = () => {
     // TODO: submit code
-    hubConnection.invoke('ReceiveMessage', { message: 'some' });
+    // hubConnection.invoke('ReceiveMessage', { message: 'some' });
   };
 
   const handleHomeClick = () => {
-    if (windowWidth <= 1100) {
+    if (windowWidth <= 1200) {
       dispatch({
         type: GlobalContextTypes.SHOW_CHAT_MENU,
         payload: {
@@ -55,15 +37,8 @@ const Chat = () => {
   };
 
   const handleHeaderClick = () => {
-    navigate(`/home/room/${id}`)
+    navigate(`/home/room/${id}`);
   };
-
-  // useEffect(() => {
-  //   const token = localStorage.getItem('token');
-  //   if (!token) {
-  //     navigate('/login');
-  //   };
-  // }, [navigate]);
 
   return (
     <div className="px-[25px] lp:px-[100px] lp:w-[68vw]">

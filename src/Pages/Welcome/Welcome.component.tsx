@@ -2,6 +2,7 @@ import { ImageSecondMask } from "Assets";
 import Button from "Elements/Button";
 import { ButtonVartian } from "Elements/Button/Button.config";
 import Title from "Elements/Title";
+import { useEffect } from "react";
 import { useNavigate } from "react-router-dom";
 
 const Welcome = () => {
@@ -10,6 +11,13 @@ const Welcome = () => {
   const handleClick = (path: string) => {
     navigate(path);
   };
+
+  useEffect(() => {
+    const token = localStorage.getItem('token');
+    if (token) {
+      navigate('/home/chat/1');
+    };
+  }, [navigate]);
 
   return (
     <main className="h-[100vh] lp:flex justify-between items-center container gap-[181px] background-image ">

@@ -13,7 +13,7 @@ const Room = () => {
   const { windowWidth } = windowSize();
 
   const handleHomeClick = () => {
-    if (windowWidth <= 1100) {
+    if (windowWidth <= 1200) {
       dispatch({
         type: GlobalContextTypes.SHOW_CHAT_MENU,
         payload: {

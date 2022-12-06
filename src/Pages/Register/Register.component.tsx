@@ -1,21 +1,53 @@
 import { ImageSecondMask } from 'Assets';
+import Toast from 'Components/Toast';
 import Button from 'Elements/Button';
 import { ButtonVartian } from 'Elements/Button/Button.config';
 import Input from 'Elements/Input';
 import Title from 'Elements/Title';
+import useRegisterMutation from 'Mutation/useRegisterMutation';
+import { useEffect, useState } from 'react';
 import { useForm } from 'react-hook-form';
 import { Link, useNavigate } from 'react-router-dom';
 
 const Register = () => {
+  const [showToast, setShowToast] = useState(false);
+  const [errorMessage, setErrorMessage] = useState("");
+
   const navigate = useNavigate();
+  const registerMutation = useRegisterMutation();
   const { register, handleSubmit } = useForm();
 
-  const onSubmit = () => {
-    navigate('/register/confirm-email');
+  const onSubmit = async (data: any) => {
+    if (data.password === data.confirmPassword) {
+      const req = await registerMutation({
+        ...data
+      });
+
+      if (req.statusCode === 200) {
+        localStorage.setItem('userData', JSON.stringify(req));
+        navigate('/register/confirm-email');
+      } else {
+        console.log(req.message[0], 'some');
+
+        setErrorMessage(req.message[0] || '');
+        setShowToast(true);
+      }
+    } else {
+      setErrorMessage('Password does not match');
+      setShowToast(true);
+    }
   };
+
+  useEffect(() => {
+    const token = localStorage.getItem('token');
+    if (token) {
+      navigate('/home/chat/1');
+    };
+  }, [navigate]);
 
   return (
     <main className="lp:flex justify-between items-center container gap-[181px] h-[100vh]">
+      <Toast show={showToast} message={errorMessage} onClose={() => setShowToast(false)} />
       <div className="hidden lp:block w-[50vw] h-[100vh]">
         <img
           src={ImageSecondMask}
@@ -24,7 +56,7 @@ const Register = () => {
         />
       </div>
       <div className="lp:w-[400px] relative">
-        <div className="flex flex-col mt-[167px] lp:mt-0">
+        <div className="flex flex-col lp:mt-0">
           <span className="text-[28px] text-center">Create Account</span>
         </div>
         <Title text="SIGN UP WITH EMAIL" className="mt-[29px]" />
@@ -39,6 +71,7 @@ const Register = () => {
             <Input
               id="email"
               type="email"
+              required
               placeholder="rikafashionshop@gmail.com"
               {...register('email')}
             />
@@ -49,30 +82,36 @@ const Register = () => {
             </label>
             <Input
               id="password"
+              required
               type="password"
               placeholder="Password"
               {...register('password')}
             />
           </div>
           <div className="flex flex-col">
-            <label htmlFor="password">
+            <label htmlFor="confirmPassword">
               Confirm Password
             </label>
             <Input
-              id="password"
+              id="confirmPassword"
               type="password"
+              required
               placeholder="Confirm Password"
               {...register('confirmPassword')}
             />
           </div>
           <div className="flex flex-row items-center gap-[15px] mt-[79px] lp:mt-[59px]">
             <Input
+              required
               type="checkbox"
               className="accent-black-100"
               {...register('confirmTerms')}
             />
             <span className="text-gray-100 text-[14px]">
-              I accept <span className="font-bold text-[14px]">Terms and Conditions</span>
+              I accept
+              <span className="font-bold text-[14px]">
+                Terms and Conditions
+              </span>
             </span>
           </div>
           <Button

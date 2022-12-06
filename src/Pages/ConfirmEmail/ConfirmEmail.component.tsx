@@ -1,20 +1,45 @@
 import { ImageSecondMask } from "Assets";
+import Toast from "Components/Toast";
 import Button from "Elements/Button";
 import { ButtonVartian } from "Elements/Button/Button.config";
 import Input from "Elements/Input";
+import useConfirmEmailMutation from "Mutation/useConfirmEmailMutation";
+import { useEffect, useState } from "react";
 import { useForm } from "react-hook-form";
 import { useNavigate } from "react-router-dom";
 
 const ConfirmEmail = () => {
+  const [showToast, setShowToast] = useState(false);
+  const [errorMessage, setErrorMessage] = useState("");
+
   const navigate = useNavigate();
   const { register, handleSubmit } = useForm();
+  const confirmEmail = useConfirmEmailMutation();
 
-  const onSubmit = () => {
-    navigate('/kyc/start');
+  const onSubmit = async (event: any) => {
+    const req = await confirmEmail(event);
+
+    if (req.statusCode === 200) {
+      localStorage.setItem('token', req.token.anonymerToken);
+      localStorage.setItem('userData', JSON.stringify(req));
+
+      navigate('/kyc/start');
+    } else {
+      setErrorMessage(req.message[0]);
+      setShowToast(true);
+    }
   };
+
+  useEffect(() => {
+    const token = localStorage.getItem('token');
+    if (token) {
+      navigate('/home/chat/1');
+    };
+  }, [navigate]);
 
   return (
     <main className="lp:flex justify-between items-center container gap-[181px] h-[100vh] py-[50%] lp:py-0">
+      <Toast show={showToast} message={errorMessage} onClose={() => setShowToast(false)} />
       <div className="hidden lp:block w-[50vw] h-[100vh]">
         <img
           src={ImageSecondMask}
@@ -39,7 +64,7 @@ const ConfirmEmail = () => {
               type="text"
               placeholder="XXXX"
               className="lp:w-[400px] !bg-transparent !text-black-100 !border-[1px] border-black-100 text-center"
-              {...register('confirm')}
+              {...register('code')}
             />
             <Button
               type="submit"

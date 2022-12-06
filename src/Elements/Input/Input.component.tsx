@@ -9,6 +9,7 @@ const Input = forwardRef<HTMLInputElement, IInputProps>(({
   type = 'text',
   className,
   name,
+  required,
   placeholder
 }, ref) => {
   const inputStyle = cn([
@@ -21,6 +22,7 @@ const Input = forwardRef<HTMLInputElement, IInputProps>(({
     <input
       id={id}
       name={name}
+      required={required}
       placeholder={placeholder}
       className={inputStyle}
       onChange={onChange}

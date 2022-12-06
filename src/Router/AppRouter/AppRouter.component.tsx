@@ -10,6 +10,8 @@ import Error from 'Pages/Error';
 import ConfirmEmail from 'Pages/ConfirmEmail';
 import KycStart from 'Pages/KYC/KycStart';
 import KycSuccess from 'Pages/KYC/KycSuccess';
+import Admin from 'Pages/Admin';
+import KycUpload from 'Pages/KYC/KycUpload';
 
 const AppRouter = () => (
   <BrowserRouter>
@@ -22,12 +24,14 @@ const AppRouter = () => (
       </Route>
       <Route path="/kyc" element={<KYC />} >
         <Route path="start" element={<KycStart />} />
+        <Route path="upload" element={<KycUpload />} />
         <Route path="success" element={<KycSuccess />} />
       </Route>
       <Route path="/home" element={<Home />} >
         <Route path="chat/:id" element={<Chat />} />
         <Route path="room/:id" element={<Room />} />
       </Route>
+      <Route path="/Admin" element={<Admin />} />
       <Route path="*" element={<Error />} />
     </Routes>
   </BrowserRouter>
