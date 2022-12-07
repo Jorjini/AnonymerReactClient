@@ -21,7 +21,7 @@ const Login = () => {
 
   const onSubmit = async (event: any) => {
     const req = await loginMutation(event);
-    console.log(req);
+
     if (req?.email) {
       localStorage.setItem('token', req.anonymerToken);
       localStorage.setItem('userData', JSON.stringify({ token: req }));
@@ -55,7 +55,7 @@ const Login = () => {
     const userData = JSON.parse(localStorage.getItem('userData')!);
     const userDataToken = userData?.token
 
-    if (!userDataToken?.emailVerified) {
+    if (token && !userDataToken?.emailVerified) {
       navigate('/register/confirm-email');
     } else if (token && userDataToken?.kycStatus === UserKycStatus.Pending) {
       navigate('/kyc/upload');
@@ -64,7 +64,7 @@ const Login = () => {
       userDataToken?.kycStatus === UserKycStatus.Approved &&
       userDataToken?.emailVerified
     ) {
-      navigate('/home/chat/1');
+      navigate('/home');
     }
   }, [navigate]);
 
@@ -80,7 +80,7 @@ const Login = () => {
       </div>
       <div className="lp:relative lp:w-[400px] ">
         <div className="absolute left-[50%] top-[50px] text-[32px] -translate-x-[50%] text-black-100">
-          <h1 className="font-[300]">Anonymer</h1>
+          <h1 className="font-[300] title">Anonymer</h1>
         </div>
         <div className="lp:max-w-[500px] z-20 w-full">
           <Title text="WELCOME" />

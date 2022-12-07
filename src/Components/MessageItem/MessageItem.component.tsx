@@ -23,17 +23,17 @@ const MessageItem = ({
     <div className={mainDivStyle}>
       <div>
         <div className={messageStyle}>
-          <p className={cn(mine ? 'text-white-100' : '')}>
+          <p className={cn(mine ? 'text-white-100' : '', 'break-words')}>
             {message}
           </p>
         </div>
         <div className="flex flex-row gap-[7px] items-center justify-end">
           <span className="text-gray-300 text-[11px]">
-            {time}
+            {new Date(time).toLocaleTimeString()}
           </span>
-          <div>
+          {/* <div>
             {icon}
-          </div>
+          </div> */}
         </div>
       </div>
     </div>

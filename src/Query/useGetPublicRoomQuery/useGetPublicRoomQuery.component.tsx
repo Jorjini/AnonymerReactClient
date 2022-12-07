@@ -1,7 +1,8 @@
 import FetchHelper from "Helpers/FetchHelper";
+import { useCallback } from "react";
 import { IUseGetPublicRoomQueryResponse } from "./useGetPublicRoomQuery.config";
 
 const useGetPublicRoomQuery = () => (
-  (): Promise<IUseGetPublicRoomQueryResponse> => FetchHelper('room/get-all-public', 'GET'))
+  useCallback((): Promise<IUseGetPublicRoomQueryResponse> => FetchHelper('room/get-all-public', 'GET'), []));
 
 export default useGetPublicRoomQuery;

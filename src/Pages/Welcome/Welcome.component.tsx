@@ -27,7 +27,7 @@ const Welcome = () => {
       userDataToken?.kycStatus === UserKycStatus.Approved &&
       userDataToken?.emailVerified
     ) {
-      navigate('/home/chat/1');
+      navigate('/home');
     };
   }, [navigate]);
 
@@ -42,7 +42,7 @@ const Welcome = () => {
       </div>
       <div className="lp:w-[400px] lp:h-[700px] flex flex-col items-center lp:mt-0 z-10 pt-[51px]">
         <div className="text-[32px]  mb-[50px]">
-          <h1 className="font-[300] text-white-100 lp:text-black-100">Anonymer</h1>
+          <h1 className="font-[300] text-white-100 lp:text-black-100 title">Anonymer</h1>
         </div>
         <div className="w-full hidden lp:block">
           <Title text="WELCOME" />

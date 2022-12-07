@@ -7,9 +7,16 @@ import { GlobalContextTypes } from 'Contexts/GlobalContext/GlobalContext.config'
 import Button from 'Elements/Button';
 import { ButtonVartian } from 'Elements/Button/Button.config';
 import windowSize from 'Helpers/windowSize';
+import useGetParticipantsQuery from 'Query/useGetParticipantsQuery';
+import { useEffect, useState } from 'react';
+import { useParams } from 'react-router-dom';
+import { IParticipant } from 'Types/Types';
 
 const Room = () => {
+  const [participant, setParticipant] = useState<IParticipant[]>([]);
   const { dispatch } = useGlobalContext();
+  const { id } = useParams();
+  const getParticipants = useGetParticipantsQuery();
   const { windowWidth } = windowSize();
 
   const handleHomeClick = () => {
@@ -23,12 +30,13 @@ const Room = () => {
     };
   };
 
-  // useEffect(() => {
-  //   const token = localStorage.getItem('token');
-  //   if (!token) {
-  //     navigate('/login');
-  //   };
-  // }, [navigate]);
+  useEffect(() => {
+    const req = async () => {
+      const data = await getParticipants({ roomId: id! });
+      if (data.statusCode === 200) setParticipant(data.participants);
+    }
+    req();
+  }, [getParticipants, id]);
 
   return (
     <div className="px-[25px] lp:px-[100px] lp:w-[68vw]">
@@ -55,7 +63,7 @@ const Room = () => {
           </div>
           <div className="flex flex-col gap-[10px]">
             <span className="text-[14px] text-white-100">GENERAL</span>
-            <span className="text-[11px] text-green-100">228 Online</span>
+            {/* <span className="text-[11px] text-green-100">228 Online</span> */}
           </div>
         </div>
         <span className="text-[8px]">
@@ -63,36 +71,12 @@ const Room = () => {
         </span>
       </div>
       <div className="mt-[28px] flex flex-wrap justify-center">
-        <UserItem icon={ImageAvatar} name="giorgi ghvedashvili" />
-        <UserItem icon={ImageAvatar} name="giorgi ghvedashvili" />
-        <UserItem icon={ImageAvatar} name="giorgi ghvedashvili" />
-        <UserItem icon={ImageAvatar} name="giorgi ghvedashvili" />
-        <UserItem icon={ImageAvatar} name="giorgi ghvedashvili" />
-        <UserItem icon={ImageAvatar} name="giorgi ghvedashvili" />
-        <UserItem icon={ImageAvatar} name="giorgi ghvedashvili" />
-        <UserItem icon={ImageAvatar} name="giorgi ghvedashvili" />
-        <UserItem icon={ImageAvatar} name="giorgi ghvedashvili" />
-        <UserItem icon={ImageAvatar} name="giorgi ghvedashvili" />
-        <UserItem icon={ImageAvatar} name="giorgi ghvedashvili" />
-        <UserItem icon={ImageAvatar} name="giorgi ghvedashvili" />
-        <UserItem icon={ImageAvatar} name="giorgi ghvedashvili" />
-        <UserItem icon={ImageAvatar} name="giorgi ghvedashvili" />
-        <UserItem icon={ImageAvatar} name="giorgi ghvedashvili" />
-        <UserItem icon={ImageAvatar} name="giorgi ghvedashvili" />
-        <UserItem icon={ImageAvatar} name="giorgi ghvedashvili" />
-        <UserItem icon={ImageAvatar} name="giorgi ghvedashvili" />
-        <UserItem icon={ImageAvatar} name="giorgi ghvedashvili" />
-        <UserItem icon={ImageAvatar} name="giorgi ghvedashvili" />
-        <UserItem icon={ImageAvatar} name="giorgi ghvedashvili" />
-        <UserItem icon={ImageAvatar} name="giorgi ghvedashvili" />
-        <UserItem icon={ImageAvatar} name="giorgi ghvedashvili" />
-        <UserItem icon={ImageAvatar} name="giorgi ghvedashvili" />
-        <UserItem icon={ImageAvatar} name="giorgi ghvedashvili" />
-        <UserItem icon={ImageAvatar} name="giorgi ghvedashvili" />
-        <UserItem icon={ImageAvatar} name="giorgi ghvedashvili" />
-        <UserItem icon={ImageAvatar} name="giorgi ghvedashvili" />
-        <UserItem icon={ImageAvatar} name="giorgi ghvedashvili" />
-        <UserItem icon={ImageAvatar} name="giorgi ghvedashvili" />
+        {participant.map((person) => (
+          <UserItem
+            key={person.userId}
+            icon={ImageAvatar}
+            name={`${person.firstName} ${person.lastName}`} />
+        ))}
       </div>
     </div>
   );

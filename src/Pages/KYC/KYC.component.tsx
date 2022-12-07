@@ -10,7 +10,7 @@ const KYC = () => {
     const userData = JSON.parse(localStorage.getItem('userData')!);
 
     if (userData?.token?.kycStatus === UserKycStatus.Approved) {
-      navigate('/home/chat/1');
+      navigate('/home');
     };
   }, [navigate]);
 

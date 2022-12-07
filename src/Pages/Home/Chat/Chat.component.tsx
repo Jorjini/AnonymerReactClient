@@ -10,19 +10,41 @@ import { ImageAvatar } from 'Assets';
 import { useGlobalContext } from 'Contexts/GlobalContext';
 import windowSize from 'Helpers/windowSize';
 import { GlobalContextTypes } from 'Contexts/GlobalContext/GlobalContext.config';
+import useSendMessageMutation from 'Mutation/useSendMessageMutation';
+import useGetContentQuery from 'Query/useGetContentQuery';
+import { useEffect, useRef, useState } from 'react';
+import { IReceiveMessageResponse } from '../Home.config';
+import * as SignalR from '@microsoft/signalr';
+import { IContent } from 'Types/Types';
 
 const Chat = () => {
+  const divRef = useRef<HTMLDivElement | null>(null);
+
+  const [content, setContent] = useState<IContent[]>([]);
+  const [bool, setBool] = useState(false);
+
+  const userData = JSON.parse(localStorage.getItem('userData')!);
+  const userDataToken = userData?.token
+
   const { dispatch } = useGlobalContext();
+  const sendMessage = useSendMessageMutation();
+  const getContent = useGetContentQuery();
+
   const { windowWidth } = windowSize();
   const { id } = useParams();
   const navigate = useNavigate();
 
-  const { register, handleSubmit } = useForm();
+  const { register, handleSubmit, setValue } = useForm();
 
 
-  const onSubmit = () => {
-    // TODO: submit code
-    // hubConnection.invoke('ReceiveMessage', { message: 'some' });
+  const onSubmit = async (event: any) => {
+    setValue('message', '');
+
+    await sendMessage({
+      userId: userDataToken.userId,
+      message: event.message,
+      roomId: id!
+    });
   };
 
   const handleHomeClick = () => {
@@ -39,6 +61,39 @@ const Chat = () => {
   const handleHeaderClick = () => {
     navigate(`/home/room/${id}`);
   };
+
+  useEffect(() => {
+    const req = async () => {
+      const data = await getContent({ roomId: id! })
+
+      if (data.statusCode === 200) {
+        setContent(data.content);
+      }
+    }
+    req();
+  }, [getContent, id, bool]);
+
+  const hubConnection = new SignalR.HubConnectionBuilder()
+    .withUrl(`${process.env.REACT_APP_BE_SOCKET_URL}hubs/chat?email=${userData?.token?.email}&userId=${userData?.token?.userId}&roomId=${id}`, {
+      skipNegotiation: true,
+      transport: SignalR.HttpTransportType.WebSockets
+    })
+    .build();
+
+  hubConnection.start().then(() => {
+  });
+
+  hubConnection.on('ReceiveMessage', (e: IReceiveMessageResponse) => {
+    // setContent([...content, e]);
+    // console.log(content);
+    setBool(!bool);
+
+  });
+
+  useEffect(() => {
+    const scrollHeight = divRef.current?.scrollHeight || 0;
+    divRef.current?.scrollTo(0, scrollHeight);
+  }, [divRef, content]);
 
   return (
     <div className="px-[25px] lp:px-[100px] lp:w-[68vw]">
@@ -68,7 +123,7 @@ const Chat = () => {
           </div>
           <div className="flex flex-col gap-[10px]">
             <span className="text-[14px] lp:text-white-100">GENERAL</span>
-            <span className="text-[11px] text-green-100">228 Online</span>
+            {/* <span className="text-[11px] text-green-100">228 Online</span> */}
           </div>
         </div>
         <span className="text-[11px] lp:text-white-100">
@@ -76,99 +131,19 @@ const Chat = () => {
         </span>
       </Button>
       <div className="relative">
-        <div className="chat-style lp:mt-[50px] overflow-y-auto flex flex-col gap-[16px]">
-          {/* TODO: map function must be added */}
-          <MessageItem
-            message="This is my message This is my messageThis is my messageThis is my message"
-            time="4:35 am"
-            icon="icon"
-            mine
-          />
-          <MessageItem
-            message="This is you message"
-            time="4:35 am"
-            icon="icon"
-            mine={false}
-          />
-          <MessageItem
-            message="This is you message"
-            time="4:35 am"
-            icon="icon"
-            mine={false}
-          />
-          <MessageItem
-            message="This is you message"
-            time="4:35 am"
-            icon="icon"
-            mine={false}
-          />
-          <MessageItem
-            message="This is you message"
-            time="4:35 am"
-            icon="icon"
-            mine={false}
-          />
-          <MessageItem
-            message="This is you message"
-            time="4:35 am"
-            icon="icon"
-            mine={false}
-          />
-          <MessageItem
-            message="This is you message"
-            time="4:35 am"
-            icon="icon"
-            mine={false}
-          />
-          <MessageItem
-            message="This is you message"
-            time="4:35 am"
-            icon="icon"
-            mine={false}
-          />
-          <MessageItem
-            message="This is you message"
-            time="4:35 am"
-            icon="icon"
-            mine={false}
-          />
-
-          <MessageItem
-            message="This is you message"
-            time="4:35 am"
-            icon="icon"
-            mine={false}
-          />
-          <MessageItem
-            message="This is you message"
-            time="4:35 am"
-            icon="icon"
-            mine={false}
-          />
-          <MessageItem
-            message="This is you message"
-            time="4:35 am"
-            icon="icon"
-            mine={false}
-          />
-          <MessageItem
-            message="This is you message"
-            time="4:35 am"
-            icon="icon"
-            mine={false}
-          />
-          <MessageItem
-            message="This is you message"
-            time="4:35 am"
-            icon="icon"
-            mine={false}
-          />
-          <MessageItem
-            message="This is you message"
-            time="4:35 am"
-            icon="icon"
-            mine={false}
-          />
+        <div
+          ref={divRef}
+          className="chat-style lp:mt-[50px] overflow-y-auto overflow-x-hidden flex flex-col gap-[16px]"
+        >
+          {content.map((message) => (
+            <MessageItem
+              key={message._id}
+              message={message.content}
+              time={message.created}
+              icon="icon"
+              mine={message.userId === userDataToken.userId}
+            />
+          ))}
         </div>
         <form
           onSubmit={handleSubmit(onSubmit)}

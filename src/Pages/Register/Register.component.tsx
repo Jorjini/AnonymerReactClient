@@ -28,8 +28,6 @@ const Register = () => {
         localStorage.setItem('userData', JSON.stringify(req));
         navigate('/register/confirm-email');
       } else {
-        console.log(req.message[0], 'some');
-
         setErrorMessage(req.message[0] || '');
         setShowToast(true);
       }
@@ -53,7 +51,7 @@ const Register = () => {
       userDataToken?.kycStatus === UserKycStatus.Approved &&
       userDataToken?.emailVerified
     ) {
-      navigate('/home/chat/1');
+      navigate('/home');
     };
   }, [navigate]);
 

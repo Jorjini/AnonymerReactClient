@@ -28,7 +28,7 @@ const FetchHelper = async (endpoint: string, method: string, body?: any, headers
     body: changedBody
   });
 
-  const jsonResponse = await response.json();
+  const jsonResponse = await response?.json();
 
   return jsonResponse;
 };
