@@ -8,6 +8,7 @@ import useRegisterMutation from 'Mutation/useRegisterMutation';
 import { useEffect, useState } from 'react';
 import { useForm } from 'react-hook-form';
 import { Link, useNavigate } from 'react-router-dom';
+import { UserKycStatus } from 'Types/Types';
 
 const Register = () => {
   const [showToast, setShowToast] = useState(false);
@@ -38,12 +39,23 @@ const Register = () => {
     }
   };
 
-  // useEffect(() => {
-  //   const token = localStorage.getItem('token');
-  //   if (token) {
-  //     navigate('/home/chat/1');
-  //   };
-  // }, [navigate]);
+  useEffect(() => {
+    const token = localStorage.getItem('token');
+    const userData = JSON.parse(localStorage.getItem('userData')!);
+    const userDataToken = userData?.token
+
+    if (token && !userDataToken?.emailVerified) {
+      navigate('/register/confirm-email');
+    } else if (token && userDataToken?.kycStatus === UserKycStatus.Pending) {
+      navigate('/kyc/upload');
+    } else if (
+      token &&
+      userDataToken?.kycStatus === UserKycStatus.Approved &&
+      userDataToken?.emailVerified
+    ) {
+      navigate('/home/chat/1');
+    };
+  }, [navigate]);
 
   return (
     <main className="lp:flex justify-between items-center container gap-[181px] h-[100vh]">

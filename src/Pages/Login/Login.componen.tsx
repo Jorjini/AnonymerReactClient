@@ -50,23 +50,23 @@ const Login = () => {
     }
   };
 
-  // useEffect(() => {
-  //   const token = localStorage.getItem('token');
-  //   const userData = JSON.parse(localStorage.getItem('userData')!);
-  //   const userDataToken = userData?.token
-  //
-  //   if (token && !userDataToken?.emailVerified) {
-  //     navigate('/register/confirm-email');
-  //   } else if (token && userDataToken?.kycStatus !== UserKycStatus.Completed) {
-  //     navigate('/kyc/upload');
-  //   } else if (
-  //     token &&
-  //     userDataToken?.kycStatus === UserKycStatus.Completed &&
-  //     userDataToken?.emailVerified
-  //   ) {
-  //     navigate('/home/chat/1');
-  //   };
-  // }, [navigate]);
+  useEffect(() => {
+    const token = localStorage.getItem('token');
+    const userData = JSON.parse(localStorage.getItem('userData')!);
+    const userDataToken = userData?.token
+
+    if (!userDataToken?.emailVerified) {
+      navigate('/register/confirm-email');
+    } else if (token && userDataToken?.kycStatus === UserKycStatus.Pending) {
+      navigate('/kyc/upload');
+    } else if (
+      token &&
+      userDataToken?.kycStatus === UserKycStatus.Approved &&
+      userDataToken?.emailVerified
+    ) {
+      navigate('/home/chat/1');
+    }
+  }, [navigate]);
 
   return (
     <main className="lp:flex justify-between items-center container gap-[181px] h-[100vh]">

@@ -1,16 +1,18 @@
 import { ImageSecondMask } from "Assets";
 import { useEffect } from "react";
 import { Outlet, useNavigate } from "react-router-dom";
+import { UserKycStatus } from "Types/Types";
 
 const KYC = () => {
   const navigate = useNavigate();
 
-  // useEffect(() => {
-  //   const token = localStorage.getItem('token');
-  //   if (token) {
-  //     navigate('/home/chat/1');
-  //   };
-  // }, [navigate]);
+  useEffect(() => {
+    const userData = JSON.parse(localStorage.getItem('userData')!);
+
+    if (userData?.token?.kycStatus === UserKycStatus.Approved) {
+      navigate('/home/chat/1');
+    };
+  }, [navigate]);
 
   return (
     <main className="px-[25px] lp:px-0 lp:flex justify-between items-center container gap-[181px] h-[100vh]">

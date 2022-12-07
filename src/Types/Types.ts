@@ -17,3 +17,15 @@ export interface IKyc {
   lastName: string;
   userId: string
 }
+
+export interface IRoom {
+  active: boolean;
+  capacity: number;
+  id: string;
+  index: string;
+  modifier: string;
+  name: string;
+  realm: number;
+  type: string;
+  userId: string;
+}

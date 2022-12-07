@@ -7,6 +7,7 @@ import useConfirmEmailMutation from "Mutation/useConfirmEmailMutation";
 import { useEffect, useState } from "react";
 import { useForm } from "react-hook-form";
 import { useNavigate } from "react-router-dom";
+import { UserKycStatus } from "Types/Types";
 
 const ConfirmEmail = () => {
   const [showToast, setShowToast] = useState(false);
@@ -35,8 +36,14 @@ const ConfirmEmail = () => {
     const userData = JSON.parse(localStorage.getItem('userData')!);
     const userDataToken = userData?.token
 
-    if (token && userDataToken.emailVerified) {
+    if (token && userDataToken?.emailVerified && userDataToken?.kycStatus === UserKycStatus.Pending) {
       navigate('/kyc/upload');
+    } else if (
+      token &&
+      userDataToken?.kycStatus === UserKycStatus.Approved &&
+      userDataToken?.emailVerified
+    ) {
+      navigate('/home/chat/1');
     };
   }, [navigate]);
 

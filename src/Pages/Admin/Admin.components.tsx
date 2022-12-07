@@ -4,12 +4,11 @@ import { useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { IKyc, UserKycStatus } from "Types/Types";
 import * as SignalR from '@microsoft/signalr';
-import {logDOM} from "@testing-library/react";
 
 const Admin = () => {
   const [allData, setAllData] = useState<IKyc[]>([]);
   const userData: any = JSON.parse(localStorage.getItem('userData')!);
-  const admin = userData.token.role === 'Admin';
+  const admin = userData?.token?.role === 'Admin';
 
   const navigate = useNavigate();
   const getAllActive = useGetAllActiveQuery();
@@ -37,15 +36,14 @@ const Admin = () => {
   // Sockets
   // TODO: Need to pass email
   const hubConnection = new SignalR.HubConnectionBuilder()
-      .withUrl(`${process.env.REACT_APP_BE_SOCKET_URL}hubs/admin?email=${userData?.token?.email}`, {
-        skipNegotiation: true,
-        transport: SignalR.HttpTransportType.WebSockets
-      })
-      .build();
+    .withUrl(`${process.env.REACT_APP_BE_SOCKET_URL}hubs/admin?email=${userData?.token?.email}`, {
+      skipNegotiation: true,
+      transport: SignalR.HttpTransportType.WebSockets
+    })
+    .build();
 
   hubConnection.start().then(() => {
-    // hubConnection.invoke('send-message', { message: 'text is done' });
-    hubConnection.on('newKyc', (e) => newKycHandler());
+    hubConnection.on('newKyc', () => newKycHandler());
   });
 
   const newKycHandler = async () => {
@@ -59,7 +57,7 @@ const Admin = () => {
       kycId,
       status: UserKycStatus.Rejected
     });
-    setAllData(allData.filter(k => {return k.id !== kycId}));
+    setAllData(allData.filter(k => { return k.id !== kycId }));
   };
 
   const handleAcceptClick = (kycId: string) => {
@@ -68,11 +66,8 @@ const Admin = () => {
       kycId,
       status: UserKycStatus.Approved
     });
-    setAllData(allData.filter(k => {return k.id !== kycId}));
+    setAllData(allData.filter(k => { return k.id !== kycId }));
   };
-
-
-
 
   return (
     <main className="p-[25px]">

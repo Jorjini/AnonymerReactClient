@@ -1,4 +1,4 @@
-import {useEffect, useState} from "react";
+import { useEffect, useState } from "react";
 import { faPlus } from '@fortawesome/free-solid-svg-icons'
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
 import MenuItem from 'Components/MenuItem'
@@ -9,20 +9,20 @@ import { ButtonVartian } from 'Elements/Button/Button.config'
 import windowSize from 'Helpers/windowSize'
 // import { useEffect } from 'react'
 import { Outlet, useNavigate } from 'react-router-dom'
-import { menuItems } from './Home.mock'
 // import * as SignalR from '@microsoft/signalr';
 import useGetPublicRoomQuery from 'Query/useGetPublicRoomQuery'
-import {IRoom} from "./Room/Room.config";
+import { IRoom, UserKycStatus } from "Types/Types";
 
 
 const Home = () => {
+  const getPublicRooms = useGetPublicRoomQuery();
   const { state, dispatch } = useGlobalContext();
   const { windowWidth } = windowSize();
   const navigate = useNavigate();
   const [rooms, setRooms] = useState<IRoom[]>([]);
 
   const handleClick = (id: string) => {
-    navigate(`/home/room/${id}`);
+    navigate(`/home/chat/${id}`);
     if (windowWidth <= 1200) {
       dispatch({
         type: GlobalContextTypes.SHOW_CHAT_MENU,
@@ -33,19 +33,38 @@ const Home = () => {
     };
   };
 
+  const handleLogOutClick = () => {
+    localStorage.clear();
+    navigate('/login');
+  };
+
   useEffect(() => {
     const token = localStorage.getItem('token');
-    if (!token) {
+    const userData = JSON.parse(localStorage.getItem('userData')!);
+    const userDataToken = userData?.token
+
+    if (
+      !token ||
+      userDataToken?.kycStatus !== UserKycStatus.Approved ||
+      !userDataToken?.emailVerified
+    ) {
       navigate('/login');
     };
   }, [navigate]);
 
-  const getPublicRooms = useGetPublicRoomQuery();
 
-  getPublicRooms()
-      .then((e) => {
-        setRooms(e.rooms);
-      })
+
+  useEffect(() => {
+    const req = async () => {
+      const data = await getPublicRooms();
+
+      if (data.statusCode === 200) setRooms(data.rooms);
+    }
+    req();
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [])
+
+
 
   // Sockets
   // TODO: Need to pass email
@@ -79,17 +98,17 @@ const Home = () => {
             Chats
           </span>
           <div className="flex flex-col gap-[15px] mt-[20px] lp:px-[50px]">
-            {rooms.map((r) => (
+            {rooms?.map((room) => (
               <Button
                 variant={ButtonVartian.NONE}
                 className="!rounded-[50px] "
-                onClick={() => handleClick(r.id)}
+                onClick={() => handleClick(room.id)}
               >
                 <MenuItem
-                  key={r.id}
-                  icon={r.src}
-                  online={r.online}
-                  title={r.title}
+                  key={room.id}
+                  icon=""
+                  online={room.realm}
+                  title={room.name}
                 />
               </Button>
             ))}
@@ -107,20 +126,27 @@ const Home = () => {
                   className="[&>*]:fill-white-100"
                 />
               </Button>
-              <Button
-                variant={ButtonVartian.PRIMARY}
-                className="w-full max-h-[70px] py-[22px] !rounded-[50px]"
-              >
-                <span className="text-white-100 mr-[10px]">
-                  Create Channel
-                </span>
-                <FontAwesomeIcon
-                  icon={faPlus}
-                  color="white"
-                  className="[&>*]:fill-white-100"
-                />
-              </Button>
             </div>
+            <Button
+              variant={ButtonVartian.PRIMARY}
+              className="w-full max-h-[70px] py-[22px] !rounded-[50px]"
+            >
+              <span className="text-white-100 mr-[10px]">
+                Create Channel
+              </span>
+              <FontAwesomeIcon
+                icon={faPlus}
+                color="white"
+                className="[&>*]:fill-white-100"
+              />
+            </Button>
+            <Button
+              variant={ButtonVartian.PRIMARY}
+              onClick={handleLogOutClick}
+              className="w-full max-h-[70px] py-[22px] !rounded-[50px] mt-[50px]"
+            >
+              Log out
+            </Button>
           </div>
         </div>
       )}

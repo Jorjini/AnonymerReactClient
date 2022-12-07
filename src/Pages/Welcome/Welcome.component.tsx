@@ -4,6 +4,7 @@ import { ButtonVartian } from "Elements/Button/Button.config";
 import Title from "Elements/Title";
 import { useEffect } from "react";
 import { useNavigate } from "react-router-dom";
+import { UserKycStatus } from "Types/Types";
 
 const Welcome = () => {
   const navigate = useNavigate();
@@ -14,8 +15,19 @@ const Welcome = () => {
 
   useEffect(() => {
     const token = localStorage.getItem('token');
-    if (token) {
-      navigate('/home');
+    const userData = JSON.parse(localStorage.getItem('userData')!);
+    const userDataToken = userData?.token
+
+    if (token && !userDataToken?.emailVerified) {
+      navigate('/register/confirm-email');
+    } else if (token && userDataToken?.kycStatus === UserKycStatus.Pending) {
+      navigate('/kyc/upload');
+    } else if (
+      token &&
+      userDataToken?.kycStatus === UserKycStatus.Approved &&
+      userDataToken?.emailVerified
+    ) {
+      navigate('/home/chat/1');
     };
   }, [navigate]);
 

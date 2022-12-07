@@ -1,14 +1,14 @@
 import { faArrowRight } from "@fortawesome/free-solid-svg-icons";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
-import Spinner from "Components/Spinner/Spinner.component";
 import Button from "Elements/Button";
 import { ButtonVartian } from "Elements/Button/Button.config";
 import Input from "Elements/Input";
 import useKycInitMutation from "Mutation/useKycInitMutation";
+import { useEffect } from "react";
 import { useForm } from "react-hook-form";
 // import { useNavigate } from "react-router-dom";
+import { useNavigate } from "react-router-dom";
 import { UserKycStatus } from "Types/Types";
-import {useNavigate} from "react-router-dom";
 
 const KycUpload = () => {
   const userData = localStorage.getItem('userData')!;
@@ -31,15 +31,30 @@ const KycUpload = () => {
     const req = await kycInitMutation(formData);
 
     if (req.statusCode === 200) {
-        navigate('/kyc/pending');
+      navigate('/kyc/pending');
     } else {
       // TODO: Toast
     }
   };
 
+  useEffect(() => {
+    const token = localStorage.getItem('token');
+    const userData = JSON.parse(localStorage.getItem('userData')!);
+    const userDataToken = userData?.token
+
+    if (token && userDataToken?.kycStatus === UserKycStatus.Pending) {
+      navigate('/kyc/pending');
+    } else if (
+      token &&
+      userDataToken?.kycStatus === UserKycStatus.Approved &&
+      userDataToken?.emailVerified
+    ) {
+      navigate('/home/chat/1');
+    };
+  }, [navigate]);
+
   return (
     <form onSubmit={handleSubmit(onSubmit)}>
-      <Spinner text="Pending..." show={token?.kycStatus === UserKycStatus.Pending} />
       <div className="flex flex-row justify-center mt-[51px] mb-[141px]">
         <h1 className="lp:hidden block text-[32px]">Anonymer</h1>
       </div>

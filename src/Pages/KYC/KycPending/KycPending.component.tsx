@@ -1,5 +1,8 @@
 import * as SignalR from '@microsoft/signalr';
-import {useNavigate} from "react-router-dom";
+import Spinner from 'Components/Spinner/Spinner.component';
+import { useEffect } from 'react';
+import { useNavigate } from "react-router-dom";
+import { UserKycStatus } from 'Types/Types';
 
 const KycPending = () => {
     const userData: any = JSON.parse(localStorage.getItem('userData')!);
@@ -16,8 +19,7 @@ const KycPending = () => {
     hubConnection.start().then(() => {
         // hubConnection.invoke('send-message', { message: 'text is done' });
         hubConnection.on('kycDone', (e) => {
-            if(e === "Approved")
-            {
+            if (e === "Approved") {
                 navigate("/home");
             }
             else {
@@ -25,8 +27,23 @@ const KycPending = () => {
             }
         });
     });
-    return(
-        <>Pending...</>
+
+    useEffect(() => {
+        const token = localStorage.getItem('token');
+        const userData = JSON.parse(localStorage.getItem('userData')!);
+        const userDataToken = userData?.token
+
+        if (
+            token &&
+            userDataToken?.kycStatus === UserKycStatus.Approved &&
+            userDataToken?.emailVerified
+        ) {
+            navigate('/home/chat/1');
+        };
+    }, [navigate]);
+
+    return (
+        <Spinner text="Pending..." show />
     );
 }
 
