@@ -2,78 +2,134 @@ import Button from 'Elements/Button';
 import { ButtonVartian } from 'Elements/Button/Button.config';
 import Input from 'Elements/Input';
 import { useForm } from 'react-hook-form';
-import { useNavigate } from 'react-router-dom';
-import FacebookLogin from 'react-facebook-login';
-import useFbAuthMutation from 'Mutation/useFbAuthMutation';
+import { Link, useNavigate } from 'react-router-dom';
+import { ImageSecondMask } from 'Assets';
+import Title from 'Elements/Title';
+import useLoginMutation from 'Mutation/useLoginMutation';
+import { useEffect, useState } from 'react';
+import Toast from 'Components/Toast';
+import { UserKycStatus } from 'Types/Types';
 
 const Login = () => {
-  const navigate = useNavigate();
-  const fbLogin = useFbAuthMutation();
+  const [showToast, setShowToast] = useState(false);
+  const [errorMessage, setErrorMessage] = useState("");
 
+  const navigate = useNavigate();
   const { register, handleSubmit } = useForm();
 
-  const onSubmit = () => {
-    navigate('/kyc');
+  const loginMutation = useLoginMutation();
+
+  const onSubmit = async (event: any) => {
+    const req = await loginMutation(event);
+    console.log(req);
+    if (req?.email) {
+      localStorage.setItem('token', req.anonymerToken);
+      localStorage.setItem('userData', JSON.stringify({ token: req }));
+
+      if (!req.emailVerified) {
+        navigate('/register/confirm-email');
+      } else if (req.kycStatus === UserKycStatus.NotSet) {
+        navigate('/kyc/upload');
+      } else if (req.kycStatus === UserKycStatus.Pending) {
+        setErrorMessage("KYC on pending");
+        setShowToast(true);
+      } else if (req.kycStatus === UserKycStatus.Approved) {
+        navigate("/home");
+      }
+      else if (req.kycStatus === UserKycStatus.Rejected) {
+        setErrorMessage("KYC on this account rejected.");
+        setShowToast(true);
+      }
+      else {
+        setErrorMessage("Something Went Wrong.");
+        setShowToast(true);
+      };
+    } else {
+      setErrorMessage(req.message[0]);
+      setShowToast(true);
+    }
   };
 
-  const responseFacebook = async (e: any) => {
-    const req = await fbLogin({ accessToken: e?.accessToken });
-    if (req.statusCode === 200) localStorage.setItem('token', req.token);
-    navigate('/');
-  };
+  useEffect(() => {
+    const token = localStorage.getItem('token');
+    const userData = JSON.parse(localStorage.getItem('userData')!);
+    const userDataToken = userData?.token
+
+    if (!userDataToken?.emailVerified) {
+      navigate('/register/confirm-email');
+    } else if (token && userDataToken?.kycStatus === UserKycStatus.Pending) {
+      navigate('/kyc/upload');
+    } else if (
+      token &&
+      userDataToken?.kycStatus === UserKycStatus.Approved &&
+      userDataToken?.emailVerified
+    ) {
+      navigate('/home/chat/1');
+    }
+  }, [navigate]);
 
   return (
-    <main className="px-[25px]">
-      <div className="absolute left-[50%] top-[50px] text-[32px] -translate-x-[50%] text-black-100">
-        <h1 className="font-[300]">Anonymer</h1>
-      </div>
-      <div className="flex flex-col mt-[230px]">
-        <span className="text-[20px]">Welcome!</span>
-        <span className="text-gray-100">please login to continue</span>
-      </div>
-      <form
-        className="mt-[49px]"
-        onSubmit={handleSubmit(onSubmit)}
-      >
-        <div className="flex flex-col mb-[14px]">
-          <label htmlFor="email">
-            Email
-          </label>
-          <Input
-            id="email"
-            type="email"
-            placeholder="rikafashionshop@gmail.com"
-            {...register('email')}
-          />
-        </div>
-        <div className="flex flex-col">
-          <label htmlFor="password">
-            Password
-          </label>
-          <Input
-            id="password"
-            type="password"
-            placeholder="Password"
-            {...register('password')}
-          />
-        </div>
-        <Button
-          type="submit"
-          variant={ButtonVartian.PRIMARY}
-          className="w-full py-[13px] max-h-[50px] mt-[52px]"
-        >
-          Login
-        </Button>
-        <FacebookLogin
-          appId={process.env.REACT_APP_FACEBOOK_ID!}
-          autoLoad={true}
-          fields="name,email,picture"
-          callback={responseFacebook}
-          cssClass="border-[1px] border-black-100 rounded-[24px] w-full py-[13px] max-h-[50px] mt-[10px]
-          flex flex-row gap-[10px] items-center justify-center"
-          icon="fa-facebook"
+    <main className="lp:flex justify-between items-center container gap-[181px] h-[100vh]">
+      <Toast show={showToast} message={errorMessage} onClose={() => setShowToast(false)} />
+      <div className="hidden lp:block w-[50vw] h-[100vh]">
+        <img
+          src={ImageSecondMask}
+          alt=""
+          className="w-full h-full z-0"
         />
-      </form>
+      </div>
+      <div className="lp:relative lp:w-[400px] ">
+        <div className="absolute left-[50%] top-[50px] text-[32px] -translate-x-[50%] text-black-100">
+          <h1 className="font-[300]">Anonymer</h1>
+        </div>
+        <div className="lp:max-w-[500px] z-20 w-full">
+          <Title text="WELCOME" />
+          <form
+            className="mt-[49px]"
+            onSubmit={handleSubmit(onSubmit)}
+          >
+            <div className="flex flex-col mb-[14px]">
+              <label htmlFor="email">
+                Email
+              </label>
+              <Input
+                id="email"
+                type="email"
+                required
+                placeholder="rikafashionshop@gmail.com"
+                {...register('email')}
+              />
+            </div>
+            <div className="flex flex-col">
+              <label htmlFor="password">
+                Password
+              </label>
+              <Input
+                id="password"
+                type="password"
+                required
+                placeholder="Password"
+                {...register('password')}
+              />
+            </div>
+            <Button
+              type="submit"
+              variant={ButtonVartian.PRIMARY}
+              className="w-full py-[13px] max-h-[50px] mt-[52px]"
+            >
+              Login
+            </Button>
+            <div className="flex flex-row justify-center mt-[55px]">
+              <span className="text-[14px]">
+                Do not have an account?
+                <Link to="/register" className="color-black-100 text-[14px] font-bold ml-[4px]">
+                  Sign Up
+                </Link>
+              </span>
+            </div>
+          </form>
+        </div>
+      </div>
     </main>
   );
 };
