@@ -21,7 +21,7 @@ const Login = () => {
 
   const onSubmit = async (event: any) => {
     const req = await loginMutation(event);
-    console.log(req);
+
     if (req?.email) {
       localStorage.setItem('token', req.anonymerToken);
       localStorage.setItem('userData', JSON.stringify({ token: req }));
@@ -55,7 +55,7 @@ const Login = () => {
     const userData = JSON.parse(localStorage.getItem('userData')!);
     const userDataToken = userData?.token
 
-    if (!userDataToken?.emailVerified) {
+    if (token && !userDataToken?.emailVerified) {
       navigate('/register/confirm-email');
     } else if (token && userDataToken?.kycStatus === UserKycStatus.Pending) {
       navigate('/kyc/upload');

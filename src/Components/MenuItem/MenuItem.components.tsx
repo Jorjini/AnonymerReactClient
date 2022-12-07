@@ -18,9 +18,9 @@ const MenuItem = ({
         {title}
       </span>
     </div>
-    <span className="text-[11px] text-white-100">
+    {/* <span className="text-[11px] text-white-100">
       {`${online} online`}
-    </span>
+    </span> */}
   </div>
 );
 

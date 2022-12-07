@@ -7,9 +7,15 @@ import { GlobalContextTypes } from 'Contexts/GlobalContext/GlobalContext.config'
 import Button from 'Elements/Button';
 import { ButtonVartian } from 'Elements/Button/Button.config';
 import windowSize from 'Helpers/windowSize';
+import useGetParticipantsQuery from 'Query/useGetParticipantsQuery';
+import { useEffect, useState } from 'react';
+import { useParams } from 'react-router-dom';
 
 const Room = () => {
+  const [participant, setParticipant] = useState<unknown[]>([]);
   const { dispatch } = useGlobalContext();
+  const { id } = useParams();
+  const getParticipants = useGetParticipantsQuery();
   const { windowWidth } = windowSize();
 
   const handleHomeClick = () => {
@@ -23,12 +29,16 @@ const Room = () => {
     };
   };
 
-  // useEffect(() => {
-  //   const token = localStorage.getItem('token');
-  //   if (!token) {
-  //     navigate('/login');
-  //   };
-  // }, [navigate]);
+  useEffect(() => {
+    const req = async () => {
+      const data = await getParticipants({ roomId: id! });
+      console.log(data);
+
+      if (data.statusCode === 200) setParticipant(data.participants);
+    }
+    req();
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, []);
 
   return (
     <div className="px-[25px] lp:px-[100px] lp:w-[68vw]">
@@ -63,36 +73,9 @@ const Room = () => {
         </span>
       </div>
       <div className="mt-[28px] flex flex-wrap justify-center">
-        <UserItem icon={ImageAvatar} name="giorgi ghvedashvili" />
-        <UserItem icon={ImageAvatar} name="giorgi ghvedashvili" />
-        <UserItem icon={ImageAvatar} name="giorgi ghvedashvili" />
-        <UserItem icon={ImageAvatar} name="giorgi ghvedashvili" />
-        <UserItem icon={ImageAvatar} name="giorgi ghvedashvili" />
-        <UserItem icon={ImageAvatar} name="giorgi ghvedashvili" />
-        <UserItem icon={ImageAvatar} name="giorgi ghvedashvili" />
-        <UserItem icon={ImageAvatar} name="giorgi ghvedashvili" />
-        <UserItem icon={ImageAvatar} name="giorgi ghvedashvili" />
-        <UserItem icon={ImageAvatar} name="giorgi ghvedashvili" />
-        <UserItem icon={ImageAvatar} name="giorgi ghvedashvili" />
-        <UserItem icon={ImageAvatar} name="giorgi ghvedashvili" />
-        <UserItem icon={ImageAvatar} name="giorgi ghvedashvili" />
-        <UserItem icon={ImageAvatar} name="giorgi ghvedashvili" />
-        <UserItem icon={ImageAvatar} name="giorgi ghvedashvili" />
-        <UserItem icon={ImageAvatar} name="giorgi ghvedashvili" />
-        <UserItem icon={ImageAvatar} name="giorgi ghvedashvili" />
-        <UserItem icon={ImageAvatar} name="giorgi ghvedashvili" />
-        <UserItem icon={ImageAvatar} name="giorgi ghvedashvili" />
-        <UserItem icon={ImageAvatar} name="giorgi ghvedashvili" />
-        <UserItem icon={ImageAvatar} name="giorgi ghvedashvili" />
-        <UserItem icon={ImageAvatar} name="giorgi ghvedashvili" />
-        <UserItem icon={ImageAvatar} name="giorgi ghvedashvili" />
-        <UserItem icon={ImageAvatar} name="giorgi ghvedashvili" />
-        <UserItem icon={ImageAvatar} name="giorgi ghvedashvili" />
-        <UserItem icon={ImageAvatar} name="giorgi ghvedashvili" />
-        <UserItem icon={ImageAvatar} name="giorgi ghvedashvili" />
-        <UserItem icon={ImageAvatar} name="giorgi ghvedashvili" />
-        <UserItem icon={ImageAvatar} name="giorgi ghvedashvili" />
-        <UserItem icon={ImageAvatar} name="giorgi ghvedashvili" />
+        {participant.map((person) => (
+          <UserItem icon={ImageAvatar} name="giorgi ghvedashvili" />
+        ))}
       </div>
     </div>
   );
