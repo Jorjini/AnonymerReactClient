@@ -12,6 +12,7 @@ import KycStart from 'Pages/KYC/KycStart';
 import KycSuccess from 'Pages/KYC/KycSuccess';
 import Admin from 'Pages/Admin';
 import KycUpload from 'Pages/KYC/KycUpload';
+import KycPending from "../../Pages/KYC/KycPending";
 
 const AppRouter = () => (
   <BrowserRouter>
@@ -25,6 +26,7 @@ const AppRouter = () => (
       <Route path="/kyc" element={<KYC />} >
         <Route path="start" element={<KycStart />} />
         <Route path="upload" element={<KycUpload />} />
+        <Route path="pending" element={<KycPending />} />
         <Route path="success" element={<KycSuccess />} />
       </Route>
       <Route path="/home" element={<Home />} >

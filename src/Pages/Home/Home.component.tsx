@@ -1,3 +1,4 @@
+import {useEffect, useState} from "react";
 import { faPlus } from '@fortawesome/free-solid-svg-icons'
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
 import MenuItem from 'Components/MenuItem'
@@ -11,14 +12,17 @@ import { Outlet, useNavigate } from 'react-router-dom'
 import { menuItems } from './Home.mock'
 // import * as SignalR from '@microsoft/signalr';
 import useGetPublicRoomQuery from 'Query/useGetPublicRoomQuery'
+import {IRoom} from "./Room/Room.config";
+
 
 const Home = () => {
   const { state, dispatch } = useGlobalContext();
   const { windowWidth } = windowSize();
   const navigate = useNavigate();
+  const [rooms, setRooms] = useState<IRoom[]>([]);
 
-  const handleClick = (id: number) => {
-    navigate(`/home/chat/${id}`);
+  const handleClick = (id: string) => {
+    navigate(`/home/room/${id}`);
     if (windowWidth <= 1200) {
       dispatch({
         type: GlobalContextTypes.SHOW_CHAT_MENU,
@@ -29,18 +33,19 @@ const Home = () => {
     };
   };
 
-  // useEffect(() => {
-  //   const token = localStorage.getItem('token');
-  //   if (!token) {
-  //     navigate('/login');
-  //   };
-  // }, [navigate]);
-
+  useEffect(() => {
+    const token = localStorage.getItem('token');
+    if (!token) {
+      navigate('/login');
+    };
+  }, [navigate]);
 
   const getPublicRooms = useGetPublicRoomQuery();
 
   getPublicRooms()
-    .then((e) => console.log(e, 'res'))
+      .then((e) => {
+        setRooms(e.rooms);
+      })
 
   // Sockets
   // TODO: Need to pass email
@@ -74,17 +79,17 @@ const Home = () => {
             Chats
           </span>
           <div className="flex flex-col gap-[15px] mt-[20px] lp:px-[50px]">
-            {menuItems.map((menuItem) => (
+            {rooms.map((r) => (
               <Button
                 variant={ButtonVartian.NONE}
                 className="!rounded-[50px] "
-                onClick={() => handleClick(menuItem.id)}
+                onClick={() => handleClick(r.id)}
               >
                 <MenuItem
-                  key={menuItem.id}
-                  icon={menuItem.src}
-                  online={menuItem.online}
-                  title={menuItem.title}
+                  key={r.id}
+                  icon={r.src}
+                  online={r.online}
+                  title={r.title}
                 />
               </Button>
             ))}

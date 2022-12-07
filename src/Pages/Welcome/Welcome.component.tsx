@@ -15,7 +15,7 @@ const Welcome = () => {
   useEffect(() => {
     const token = localStorage.getItem('token');
     if (token) {
-      navigate('/home/chat/1');
+      navigate('/home');
     };
   }, [navigate]);
 

@@ -21,17 +21,28 @@ const Login = () => {
 
   const onSubmit = async (event: any) => {
     const req = await loginMutation(event);
-
+    console.log(req);
     if (req?.email) {
       localStorage.setItem('token', req.anonymerToken);
       localStorage.setItem('userData', JSON.stringify({ token: req }));
 
-      if (!req.anonymerToken) {
+      if (!req.emailVerified) {
         navigate('/register/confirm-email');
-      } else if (req.kycStatus !== UserKycStatus.Completed) {
+      } else if (req.kycStatus === UserKycStatus.NotSet) {
         navigate('/kyc/upload');
-      } else {
-        navigate('/home/chat/1');
+      } else if (req.kycStatus === UserKycStatus.Pending) {
+        setErrorMessage("KYC on pending");
+        setShowToast(true);
+      } else if (req.kycStatus === UserKycStatus.Approved) {
+        navigate("/home");
+      }
+      else if (req.kycStatus === UserKycStatus.Rejected) {
+        setErrorMessage("KYC on this account rejected.");
+        setShowToast(true);
+      }
+      else {
+        setErrorMessage("Something Went Wrong.");
+        setShowToast(true);
       };
     } else {
       setErrorMessage(req.message[0]);
@@ -39,23 +50,23 @@ const Login = () => {
     }
   };
 
-  useEffect(() => {
-    const token = localStorage.getItem('token');
-    const userData = JSON.parse(localStorage.getItem('userData')!);
-    const userDataToken = userData?.token
-
-    if (token && !userDataToken?.emailVerified) {
-      navigate('/register/confirm-email');
-    } else if (token && userDataToken?.kycStatus !== UserKycStatus.Completed) {
-      navigate('/kyc/upload');
-    } else if (
-      token &&
-      userDataToken?.kycStatus === UserKycStatus.Completed &&
-      userDataToken?.emailVerified
-    ) {
-      navigate('/home/chat/1');
-    };
-  }, [navigate]);
+  // useEffect(() => {
+  //   const token = localStorage.getItem('token');
+  //   const userData = JSON.parse(localStorage.getItem('userData')!);
+  //   const userDataToken = userData?.token
+  //
+  //   if (token && !userDataToken?.emailVerified) {
+  //     navigate('/register/confirm-email');
+  //   } else if (token && userDataToken?.kycStatus !== UserKycStatus.Completed) {
+  //     navigate('/kyc/upload');
+  //   } else if (
+  //     token &&
+  //     userDataToken?.kycStatus === UserKycStatus.Completed &&
+  //     userDataToken?.emailVerified
+  //   ) {
+  //     navigate('/home/chat/1');
+  //   };
+  // }, [navigate]);
 
   return (
     <main className="lp:flex justify-between items-center container gap-[181px] h-[100vh]">

@@ -4,6 +4,7 @@ import { useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { IKyc, UserKycStatus } from "Types/Types";
 import * as SignalR from '@microsoft/signalr';
+import {logDOM} from "@testing-library/react";
 
 const Admin = () => {
   const [allData, setAllData] = useState<IKyc[]>([]);
@@ -17,11 +18,12 @@ const Admin = () => {
   useEffect(() => {
 
     if (!admin) {
-      navigate('/home/chat/1');
+      navigate('/login');
     };
   }, [navigate, admin]);
 
   useEffect(() => {
+
     const req = async () => {
       const data = await getAllActive();
 
@@ -32,36 +34,45 @@ const Admin = () => {
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
+  // Sockets
+  // TODO: Need to pass email
+  const hubConnection = new SignalR.HubConnectionBuilder()
+      .withUrl(`${process.env.REACT_APP_BE_SOCKET_URL}hubs/admin?email=${userData?.token?.email}`, {
+        skipNegotiation: true,
+        transport: SignalR.HttpTransportType.WebSockets
+      })
+      .build();
+
+  hubConnection.start().then(() => {
+    // hubConnection.invoke('send-message', { message: 'text is done' });
+    hubConnection.on('newKyc', (e) => newKycHandler());
+  });
+
+  const newKycHandler = async () => {
+    const data = await getAllActive();
+    setAllData([...data.kycs]);
+  }
+
   const handleDeclineClick = (kycId: string) => {
     changeKycStatus({
       adminId: userData.token.userId,
       kycId,
       status: UserKycStatus.Rejected
     });
+    setAllData(allData.filter(k => {return k.id !== kycId}));
   };
 
   const handleAcceptClick = (kycId: string) => {
     changeKycStatus({
       adminId: userData.token.userId,
       kycId,
-      status: UserKycStatus.Completed
+      status: UserKycStatus.Approved
     });
+    setAllData(allData.filter(k => {return k.id !== kycId}));
   };
 
 
-  // Sockets
-  // TODO: Need to pass email
-  const hubConnection = new SignalR.HubConnectionBuilder()
-    .withUrl(`${process.env.REACT_APP_BE_SOCKET_URL}hubs/admin?email=${userData?.token?.email}`, {
-      skipNegotiation: true,
-      transport: SignalR.HttpTransportType.WebSockets
-    })
-    .build();
 
-  hubConnection.start().then(() => {
-    // hubConnection.invoke('send-message', { message: 'text is done' });
-    hubConnection.on('newKyc', (e) => console.log(e, 'asdasdasd'));
-  });
 
   return (
     <main className="p-[25px]">
