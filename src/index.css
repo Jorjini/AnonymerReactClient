@@ -2,7 +2,29 @@
 @tailwind components;
 @tailwind utilities;
 
+@font-face {
+  src: url(./Assets/Fonts/MBF\ Minimal.ttf);
+  font-family: 'titleFont';
+}
+
+@font-face {
+  src: url(./Assets/Fonts/Mont-HeavyDEMO.otf);
+  font-family: 'boldFont';
+}
+
+@font-face {
+  src: url(./Assets/Fonts/Mont-ExtraLightDEMO.otf);
+  font-family: 'normalFont';
+}
+
+
+.title {
+  font-family: 'titleFont';
+}
+
+
 * {
+  font-family: 'normalFont';
   margin: 0;
   padding: 0;
   box-sizing: border-box;

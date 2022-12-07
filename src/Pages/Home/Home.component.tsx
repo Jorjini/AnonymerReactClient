@@ -67,7 +67,7 @@ const Home = () => {
       {state?.showChatMenu && (
         <div className="lp:max-w-[500px] lp:bg-black-100 w-full lp:h-[100vh]">
           <div className="flex justify-center mt-[8px] lp:my-[100px] mb-[75px] text-[32px] text-black-100">
-            <h1 className="font-[300] lp:text-white-100">Anonymer</h1>
+            <h1 className="font-[300] lp:text-white-100 title">Anonymer</h1>
           </div>
           <span className="text-[20px]">
             Chats

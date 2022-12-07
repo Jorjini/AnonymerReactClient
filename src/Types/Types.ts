@@ -37,3 +37,12 @@ export interface IContent {
   userId?: string;
   _id: string
 }
+
+export interface IParticipant {
+  firstName: string;
+  lastName: string;
+  online: boolean;
+  participantId: string;
+  roomId: string;
+  userId: string;
+}

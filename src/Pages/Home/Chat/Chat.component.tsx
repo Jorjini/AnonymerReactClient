@@ -70,7 +70,7 @@ const Chat = () => {
     }
     req();
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [setContent, id]);
+  }, []);
 
   const hubConnection = new SignalR.HubConnectionBuilder()
     .withUrl(`${process.env.REACT_APP_BE_SOCKET_URL}hubs/chat?email=${userData?.token?.email}&userId=${userData?.token?.userId}&roomId=${id}`, {
@@ -82,9 +82,11 @@ const Chat = () => {
   hubConnection.start().then(() => {
     hubConnection.on('ReceiveMessage', (e: IReceiveMessageResponse) => {
       const filter = content.filter((item) => item._id === e._id);
-      if (!filter) {
-        setContent((state) => [...state, e]);
-      }
+      console.log(filter);
+
+      // if (!!filter) {
+      setContent([...content, e]);
+      // }
     });
   });
 
@@ -92,7 +94,6 @@ const Chat = () => {
     const scrollHeight = divRef.current?.scrollHeight || 0;
     divRef.current?.scrollTo(0, scrollHeight);
   }, [divRef, content]);
-  console.log(content);
 
   return (
     <div className="px-[25px] lp:px-[100px] lp:w-[68vw]">

@@ -56,7 +56,7 @@ const KycUpload = () => {
   return (
     <form onSubmit={handleSubmit(onSubmit)}>
       <div className="flex flex-row justify-center mt-[51px] mb-[141px]">
-        <h1 className="lp:hidden block text-[32px]">Anonymer</h1>
+        <h1 className="lp:hidden block text-[32px] title">Anonymer</h1>
       </div>
       <h1 className="text-[32px]">KYC</h1>
       <span className="text-[14px]">Please use the same First and Last name as written in National ID .</span>

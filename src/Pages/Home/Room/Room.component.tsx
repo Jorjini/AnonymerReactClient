@@ -10,9 +10,10 @@ import windowSize from 'Helpers/windowSize';
 import useGetParticipantsQuery from 'Query/useGetParticipantsQuery';
 import { useEffect, useState } from 'react';
 import { useParams } from 'react-router-dom';
+import { IParticipant } from 'Types/Types';
 
 const Room = () => {
-  const [participant, setParticipant] = useState<unknown[]>([]);
+  const [participant, setParticipant] = useState<IParticipant[]>([]);
   const { dispatch } = useGlobalContext();
   const { id } = useParams();
   const getParticipants = useGetParticipantsQuery();
@@ -32,8 +33,6 @@ const Room = () => {
   useEffect(() => {
     const req = async () => {
       const data = await getParticipants({ roomId: id! });
-      console.log(data);
-
       if (data.statusCode === 200) setParticipant(data.participants);
     }
     req();
@@ -74,7 +73,7 @@ const Room = () => {
       </div>
       <div className="mt-[28px] flex flex-wrap justify-center">
         {participant.map((person) => (
-          <UserItem icon={ImageAvatar} name="giorgi ghvedashvili" />
+          <UserItem icon={ImageAvatar} name={`${person.firstName} ${person.lastName}`} />
         ))}
       </div>
     </div>

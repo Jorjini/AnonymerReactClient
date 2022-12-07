@@ -80,7 +80,7 @@ const Login = () => {
       </div>
       <div className="lp:relative lp:w-[400px] ">
         <div className="absolute left-[50%] top-[50px] text-[32px] -translate-x-[50%] text-black-100">
-          <h1 className="font-[300]">Anonymer</h1>
+          <h1 className="font-[300] title">Anonymer</h1>
         </div>
         <div className="lp:max-w-[500px] z-20 w-full">
           <Title text="WELCOME" />
