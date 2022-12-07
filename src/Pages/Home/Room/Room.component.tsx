@@ -36,8 +36,7 @@ const Room = () => {
       if (data.statusCode === 200) setParticipant(data.participants);
     }
     req();
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, []);
+  }, [getParticipants, id]);
 
   return (
     <div className="px-[25px] lp:px-[100px] lp:w-[68vw]">
@@ -64,7 +63,7 @@ const Room = () => {
           </div>
           <div className="flex flex-col gap-[10px]">
             <span className="text-[14px] text-white-100">GENERAL</span>
-            <span className="text-[11px] text-green-100">228 Online</span>
+            {/* <span className="text-[11px] text-green-100">228 Online</span> */}
           </div>
         </div>
         <span className="text-[8px]">
@@ -73,7 +72,10 @@ const Room = () => {
       </div>
       <div className="mt-[28px] flex flex-wrap justify-center">
         {participant.map((person) => (
-          <UserItem icon={ImageAvatar} name={`${person.firstName} ${person.lastName}`} />
+          <UserItem
+            key={person.userId}
+            icon={ImageAvatar}
+            name={`${person.firstName} ${person.lastName}`} />
         ))}
       </div>
     </div>

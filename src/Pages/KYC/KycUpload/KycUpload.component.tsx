@@ -49,7 +49,7 @@ const KycUpload = () => {
       userDataToken?.kycStatus === UserKycStatus.Approved &&
       userDataToken?.emailVerified
     ) {
-      navigate('/home/chat/1');
+      navigate('/home');
     };
   }, [navigate]);
 

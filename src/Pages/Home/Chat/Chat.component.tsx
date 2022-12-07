@@ -21,6 +21,7 @@ const Chat = () => {
   const divRef = useRef<HTMLDivElement | null>(null);
 
   const [content, setContent] = useState<IContent[]>([]);
+  const [bool, setBool] = useState(false);
 
   const userData = JSON.parse(localStorage.getItem('userData')!);
   const userDataToken = userData?.token
@@ -40,6 +41,7 @@ const Chat = () => {
     setValue('message', '');
 
     await sendMessage({
+      userId: userDataToken.userId,
       message: event.message,
       roomId: id!
     });
@@ -69,8 +71,7 @@ const Chat = () => {
       }
     }
     req();
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, []);
+  }, [getContent, id, bool]);
 
   const hubConnection = new SignalR.HubConnectionBuilder()
     .withUrl(`${process.env.REACT_APP_BE_SOCKET_URL}hubs/chat?email=${userData?.token?.email}&userId=${userData?.token?.userId}&roomId=${id}`, {
@@ -80,14 +81,13 @@ const Chat = () => {
     .build();
 
   hubConnection.start().then(() => {
-    hubConnection.on('ReceiveMessage', (e: IReceiveMessageResponse) => {
-      const filter = content.filter((item) => item._id === e._id);
-      console.log(filter);
+  });
 
-      // if (!!filter) {
-      setContent([...content, e]);
-      // }
-    });
+  hubConnection.on('ReceiveMessage', (e: IReceiveMessageResponse) => {
+    // setContent([...content, e]);
+    // console.log(content);
+    setBool(!bool);
+
   });
 
   useEffect(() => {
