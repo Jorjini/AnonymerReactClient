@@ -6,7 +6,6 @@ import Input from "Elements/Input";
 import useKycInitMutation from "Mutation/useKycInitMutation";
 import { useEffect } from "react";
 import { useForm } from "react-hook-form";
-// import { useNavigate } from "react-router-dom";
 import { useNavigate } from "react-router-dom";
 import { UserKycStatus } from "Types/Types";
 
@@ -14,13 +13,11 @@ const KycUpload = () => {
   const userData = localStorage.getItem('userData')!;
   const { token } = JSON.parse(userData);
 
-  // const navigate = useNavigate();
+  const navigate = useNavigate();
   const { register, handleSubmit } = useForm();
   const kycInitMutation = useKycInitMutation();
-  const navigate = useNavigate();
 
   const onSubmit = async (event: any) => {
-
     const formData = new FormData();
 
     formData.append('UserId', token.userId);
