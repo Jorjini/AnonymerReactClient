@@ -96,7 +96,7 @@ const Chat = () => {
   }, [divRef, content]);
 
   return (
-    <div className="px-[25px] lp:px-[100px] lp:w-[68vw]">
+    <div className="px-[25px] lp:px-[100px] lp:w-[68vw] h-full lp:h-auto relative">
       <Button
         onClick={handleHomeClick}
         variant={ButtonVartian.NONE}
@@ -130,7 +130,7 @@ const Chat = () => {
           VIEW ALL MEMBERS
         </span>
       </Button>
-      <div className="relative">
+      <div className="lp:relative lp:h-[60vh]">
         <div
           ref={divRef}
           className="chat-style lp:mt-[50px] overflow-y-auto overflow-x-hidden flex flex-col gap-[16px]"
@@ -147,7 +147,7 @@ const Chat = () => {
         </div>
         <form
           onSubmit={handleSubmit(onSubmit)}
-          className="flex flex-row justify-between gap-[15px] absolute bottom-[26px] w-full left-0 translate-y-[130px]"
+          className="p-[25px] lp:p-0 flex flex-row justify-between gap-[15px] absolute bottom-[26px] w-full left-0 lp:translate-y-[130px]"
         >
           <Input
             type="text"

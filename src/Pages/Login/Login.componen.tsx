@@ -55,11 +55,7 @@ const Login = () => {
     const userData = JSON.parse(localStorage.getItem('userData')!);
     const userDataToken = userData?.token
 
-    if (token && !userDataToken?.emailVerified) {
-      navigate('/register/confirm-email');
-    } else if (token && userDataToken?.kycStatus === UserKycStatus.Pending) {
-      navigate('/kyc/upload');
-    } else if (
+    if (
       token &&
       userDataToken?.kycStatus === UserKycStatus.Approved &&
       userDataToken?.emailVerified

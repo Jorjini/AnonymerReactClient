@@ -63,7 +63,7 @@ const Home = () => {
   }, [])
 
   return (
-    <main className="lp:flex flex-row justify-between">
+    <main className="lp:flex flex-row justify-between container h-full w-full">
       {state?.showChatMenu && (
         <div className="lp:max-w-[500px] lp:bg-black-100 w-full lp:h-[100vh]">
           <div className="flex justify-center mt-[8px] lp:my-[100px] mb-[75px] text-[32px] text-black-100">
@@ -127,7 +127,7 @@ const Home = () => {
         </div>
       )}
       {(!state?.showChatMenu || windowWidth > 1200) && (
-        <div>
+        <div className="w-full h-full">
           <Outlet />
         </div>
       )}
