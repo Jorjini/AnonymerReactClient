@@ -1,5 +1,5 @@
 # Get started
-The project is built for Vault company
+The project is built for Anonymer
 
 ## Project setup
 
