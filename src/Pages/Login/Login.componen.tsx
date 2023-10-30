@@ -92,7 +92,7 @@ const Login = () => {
                 id="email"
                 type="email"
                 required
-                placeholder="rikafashionshop@gmail.com"
+                placeholder="example@example.com"
                 {...register('email')}
               />
             </div>
