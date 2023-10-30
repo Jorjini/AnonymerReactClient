@@ -92,7 +92,7 @@ const Login = () => {
                 id="email"
                 type="email"
                 required
-                placeholder="rikafashionshop@gmail.com"
+                placeholder="example@example.com"
                 {...register('email')}
               />
             </div>
@@ -119,7 +119,7 @@ const Login = () => {
               <span className="text-[14px]">
                 Do not have an account?
                 <Link to="/register" className="color-black-100 text-[14px] font-bold ml-[4px]">
-                  Sign Up
+                  Register
                 </Link>
               </span>
             </div>
