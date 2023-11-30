@@ -72,10 +72,10 @@ const Room = () => {
       </div>
       <div className="mt-[28px] flex flex-wrap justify-center">
         {participant.map((person) => (
-          <UserItem
-            key={person.userId}
-            icon={ImageAvatar}
-            name={`${person.firstName} ${person.lastName}`} />
+            person.online && <UserItem
+                key={person.userId}
+                icon={ImageAvatar}
+                name={`${person.firstName} ${person.lastName}`}/>
         ))}
       </div>
     </div>
